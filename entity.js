@@ -7,6 +7,8 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
     img: null,
     frame: 0,
     nextFrame: 1.0/ANIMATION_FPS,
+    static: false,
+    grounded: false,
     vx: 0.0,
     vy: 0.0
   }
@@ -34,20 +36,32 @@ function update(entity, delta, entities, onCollision = null){
     entity.nextFrame += 1/ANIMATION_FPS;
   }
 
-  console.log(delta);
+  if (entity.static){
+    return;
+  }
 
-  entity.vy += 500 * delta;
+  if(!entity.grounded){
+    entity.vy += 500 * delta;
+  }
 
   entity.hitBox.x += entity.vx * delta;
   entity.hitBox.y += entity.vy * delta;
 
-  if (onCollision != null){
-    entities.forEach(e => {
-      if (collides(entity, e)){
+  // if (onCollision != null){
+  entities.forEach(e => {
+    if (collides(entity, e) && entity != e){
+      if (onCollision != null){
         onCollision(entity, e);
       }
-    });
-  }
+      // console.log("collision");
+      if (e.static){
+        entity.vy = 0;
+        entity.grounded = true;
+        entity.hitBox.y = e.hitBox.y - entity.hitBox.h;
+      }
+    }
+  });
+  // }
 
   return
 }
@@ -61,15 +75,16 @@ function drawEntity(entity, context){
 }
 
 function collides(entity1, entity2){
+  // console.log("check");
   return intersects(entity1.hitBox, entity2.hitBox);
 }
 
 //check rectangle collision
 function intersects(rect1, rect2){
-  return contains(rect1, rect2.x, rect2.y) ||
-  contains(rect1, rect2.x, rect2.y + rect2.h) ||
-  contains(rect1, rect2.x + rect2.w, rect2.y) ||
-  contains(rect1, rect2.x + rect2.w, rect2.y + rect2.h);
+  return (rect1.x < rect2.x + rect2.w &&
+   rect1.x + rect1.w > rect2.x &&
+   rect1.y < rect2.y + rect2.h &&
+   rect1.y + rect1.h > rect2.y);
 }
 
 //check point in rect

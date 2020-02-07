@@ -24,10 +24,16 @@ function setup() {
 
 	// Preload game assets then begin render loop
 	preloadSprites().then(() => {
+		setupLevel();
 		lastTime = Date.now();
 		render();});
+}
+
+function setupLevel(){
+	var e = newEntity(0, 500, 1000, 32);
+	e.static = true;
+	entities.push(e);
 	entities.push(newEntity(100, 100, 20, 20));
-	// entities[0].img = "character/placeholder";
 }
 
 // Match canvas resolution to document dimensions
