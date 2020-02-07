@@ -2,7 +2,7 @@ let sprites = {};
 
 function loadSprite(path, frames = 1) {
 	const promises = [];
-	
+
 	sprites[path] = [];
 	for (let i = 0; i < frames; i++) {
 		const sprite = new Image();
@@ -22,5 +22,9 @@ function loadSprite(path, frames = 1) {
 }
 
 function getSpriteFrame(path, frame = 0) {
-	return sprites[path][frame];
+	return sprites[path][frame % numFrames(path)];
+}
+
+function numFrames(path){
+	return sprites[path].length;
 }
