@@ -1,30 +1,40 @@
 document.addEventListener("DOMContentLoaded", setup);
-window.addEventListener("resize", resize);
 
 let canvas;
 let context;
-let placeholder = new Image();
-placeholder.src = "assets/character/placeholder.png";
-placeholder.addEventListener("load", setup);
 
-function resize() {
-	if (!canvas) return;
-	canvas.width = canvas.clientWidth;
-	canvas.height = canvas.clientHeight;
+function preloadSprites() {
+	return Promise.all([
+		loadSprite("character/placeholder"),
+	]);
 }
 
+// Prepare for then execute render loop
 function setup() {
+	// Get canvas
 	canvas = document.querySelector("canvas");
 	context = canvas.getContext("2d");
-	resize();
 	
-	if (!placeholder.complete) return;
-	render();
+	// Make canvas fit document
+	resize();
+	window.addEventListener("resize", resize);
+	
+	// Preload game assets then begin render loop
+	preloadSprites().then(render);
 }
 
+// Match canvas resolution to document dimensions
+function resize() {
+	if (canvas) {
+		canvas.width = canvas.clientWidth;
+		canvas.height = canvas.clientHeight;
+	}
+}
+
+// Render loop called once per frame
 function render() {
+	const placeholder = getSpriteFrame("character/placeholder");
 	context.drawImage(placeholder, 0, 0, 500, 500);
+
 	requestAnimationFrame(render);
-	console.log(canvas.width, canvas.height);
-	
 }
