@@ -10,7 +10,8 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
     static: false,
     grounded: false,
     vx: 0.0,
-    vy: 0.0
+    vy: 0.0,
+    c: newCircle(x + w/2, y + h - h/4, h/4)
   }
 }
 
@@ -28,7 +29,7 @@ function newRect(x = 0, y = 0, w = 0, h = 0){
   };
 }
 
-function update(entity, delta, entities, onCollision = null){
+function update(entity, delta, onCollision = null){
   entity.nextFrame -= delta;
   if (entity.img != null && entity.nextFrame <= 0){
     entity.frame++;
@@ -47,6 +48,11 @@ function update(entity, delta, entities, onCollision = null){
   entity.hitBox.x += entity.vx * delta;
   entity.hitBox.y += entity.vy * delta;
 
+  entity.c.x = entity.hitBox.x + entity.hitBox.w/2;
+  entity.c.y = entity.hitBox.y + entity.hitBox.h - entity.c.r;
+  // console.log(entity.c.r);
+
+  entity.grounded = checkEntityTerrain(entity);
   // if (onCollision != null){
   entities.forEach(e => {
     if (collides(entity, e) && entity != e){
