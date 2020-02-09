@@ -49,16 +49,21 @@ function checkEntityTerrain(e, delta){
   var distCheck = e.grounded ? (e.c.r * e.c.r + 100) : (e.c.r * e.c.r);
   // console.log(distCheck);
   if (closestD != -1 && closestD < distCheck){
-    ret = true;
+    // ret = true;
     //circle is too close to line
     var dirX = closestP.x - e.c.x;
-    var dirY = Math.abs(closestP.y - e.c.y);
+    var dirY = closestP.y - e.c.y;//Math.abs(closestP.y - e.c.y);
     var dist = Math.sqrt(dirX * dirX + dirY * dirY) / e.c.r;
     //normalize to radius of circle
     e.c.x = closestP.x - dirX/dist;
     e.c.y = closestP.y - dirY/dist;
     e.hitBox.x = e.c.x - e.hitBox.w/2;
     e.hitBox.y = e.c.y + e.c.r - e.hitBox.h;
+		ret = dirY > 0;
+		if (!ret){
+			e.vy = e.vy < 0 ? 0 : e.vy;
+			return ret; //ceiling collision
+		}
     //update rolling velocity
     if (e.rolling && (e.lastGround != l || !e.grounded)){
       //handle switching slopes and momentum transfer
@@ -74,10 +79,6 @@ function checkEntityTerrain(e, delta){
       var speedTrans = (1.0 - Math.abs((thetaE - (thetaL)) / (Math.PI/2))) * 1.3;
       speedTrans = speedTrans.clamp(-1.0 , 1.0);
       // console.log(speedTrans);
-      // var speedTrans = Math.cos(Math.abs((thetaE - thetaL)));
-      if (speedTrans > 1 || speedTrans < -1){
-        console.log(thetaE, thetaL, speedTrans);
-      }
       // console.log(theta);
       e.vy = (speed * speedTrans) * Math.sin(Math.abs(thetaL)) * (slope > 0 ? -1 : 1);
       e.vx = (speed * speedTrans) * Math.cos(thetaL);// * (slope > 0 ? -1 : 1);;// * (e.vx > 0 ? -1 : 1);// * (e.vx < 0 ? -1 : 1);// * (slope < 0 ? -1 : 1);// * (e.vx < 0 ? -1 : 1);

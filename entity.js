@@ -76,37 +76,44 @@ function update(entity, delta, onCollision = null){
 }
 
 function drawEntity(entity, context){
+	context.fillStyle = 'green';
   if (entity.img == null){
     context.fillRect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox.h);
   }else{
     context.drawImage(getSpriteFrame(entity.img, entity.frame), entity.hitBox.x, entity.hitBox.y);
   }
-  context.beginPath();
-  context.arc(entity.c.x, entity.c.y, entity.c.r, 0, 2 * Math.PI, false);
-  context.fillStyle = 'green';
-  context.fill();
-  // context.lineWidth = 5;
-  context.strokeStyle = '#003300';
-  context.stroke();
+	if (drawDebug){
+		context.beginPath();
+    context.rect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox.h);
+		context.stroke();
+		context.beginPath();
+		context.arc(entity.c.x, entity.c.y, entity.c.r, 0, 2 * Math.PI, false);
+		// context.fillStyle = 'green';
+		// context.fill();
+		// context.lineWidth = 5;
+		context.strokeStyle = '#003300';
+		context.stroke();
+
+	}
 }
 
 function collides(entity1, entity2){
-  // console.log("check");
-  return intersects(entity1.hitBox, entity2.hitBox);
+	// console.log("check");
+	return intersects(entity1.hitBox, entity2.hitBox);
 }
 
 //check rectangle collision
 function intersects(rect1, rect2){
-  return (rect1.x < rect2.x + rect2.w &&
-   rect1.x + rect1.w > rect2.x &&
-   rect1.y < rect2.y + rect2.h &&
-   rect1.y + rect1.h > rect2.y);
-}
+	return (rect1.x < rect2.x + rect2.w &&
+		rect1.x + rect1.w > rect2.x &&
+		rect1.y < rect2.y + rect2.h &&
+		rect1.y + rect1.h > rect2.y);
+	}
 
-//check point in rect
-function contains(rect, x, y){
-  return rect.x <= x &&
-  rect.x + rect.w >= x &&
-  rect.y <= y &&
-  rect.y + rect.h >= y;
-}
+	//check point in rect
+	function contains(rect, x, y){
+		return rect.x <= x &&
+		rect.x + rect.w >= x &&
+		rect.y <= y &&
+		rect.y + rect.h >= y;
+	}

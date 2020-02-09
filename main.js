@@ -6,6 +6,8 @@ let context;
 let entities = [];
 let lastTime;
 
+let drawDebug = false;
+
 function preloadSprites() {
 	return Promise.all([
 		loadSprite("character/placeholder"),
@@ -28,6 +30,8 @@ function setup() {
 			entities[0].vy = -300;
 		}else if (event.keyCode === 16){
 			entities[0].rolling = true;
+		}else if (event.keyCode === 88){
+			drawDebug = !drawDebug;
 		}
 	});
 
@@ -57,7 +61,7 @@ function setup() {
 		// var e = newEntity(0, 500, 1000, 32);
 		// e.static = true;
 		// entities.push(e);
-		entities.push(newEntity(100, 100, 40, 80));
+		entities.push(newEntity(100, 50, 40, 80));
 		terrain.push(newSegment(10, 100, 400, 300));
 		entities.push(newEntity(450, 10, 20, 20));
 		terrain.push(newSegment(400, 300, 410, 302));
@@ -66,6 +70,7 @@ function setup() {
 		terrain.push(newSegment(430, 301, 440, 295));
 		terrain.push(newSegment(440, 295, 450, 288));
 		terrain.push(newSegment(500, 300, 800, 100));
+		terrain.push(newSegment(0, 400, 1000, 400));
 	}
 
 	// Match canvas resolution to document dimensions
@@ -77,9 +82,9 @@ function setup() {
 			var height = canvas.clientHeight;
 			var scaleFitNative = Math.min(width / tarWidth, height / tarHeight);
 			if(scaleFitNative < 1){
-				context.imageSmoothingEnabled = true; // turn it on for low res screens
+				context.imageSmoothingEnabled = false; // turn it on for low res screens
 			}else{
-				context.imageSmoothingEnabled = false; // turn it off for high res screens.
+				context.imageSmoothingEnabled = true; // turn it off for high res screens.
 			}
 			canvas.width = width;
 			canvas.height = height;
