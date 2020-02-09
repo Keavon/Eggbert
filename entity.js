@@ -1,5 +1,6 @@
 
 const ANIMATION_FPS = 30;
+const gravity = 500;
 
 function newEntity(x = 0, y = 0, w = 0, h = 0){
   return {
@@ -9,6 +10,8 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
     nextFrame: 1.0/ANIMATION_FPS,
     static: false,
     grounded: false,
+    rolling: false,
+    lastGround: null,
     vx: 0.0,
     vy: 0.0,
     c: newCircle(x + w/2, y + h - h/4, h/4)
@@ -42,7 +45,7 @@ function update(entity, delta, onCollision = null){
   }
 
   if(!entity.grounded){
-    entity.vy += 500 * delta;
+    entity.vy += gravity * delta;
   }
 
   entity.hitBox.x += entity.vx * delta;
@@ -52,7 +55,7 @@ function update(entity, delta, onCollision = null){
   entity.c.y = entity.hitBox.y + entity.hitBox.h - entity.c.r;
   // console.log(entity.c.r);
 
-  entity.grounded = checkEntityTerrain(entity);
+  entity.grounded = checkEntityTerrain(entity, delta);
   // if (onCollision != null){
   entities.forEach(e => {
     if (collides(entity, e) && entity != e){
@@ -78,6 +81,13 @@ function drawEntity(entity, context){
   }else{
     context.drawImage(getSpriteFrame(entity.img, entity.frame), entity.hitBox.x, entity.hitBox.y);
   }
+  context.beginPath();
+  context.arc(entity.c.x, entity.c.y, entity.c.r, 0, 2 * Math.PI, false);
+  context.fillStyle = 'green';
+  context.fill();
+  // context.lineWidth = 5;
+  context.strokeStyle = '#003300';
+  context.stroke();
 }
 
 function collides(entity1, entity2){

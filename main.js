@@ -23,9 +23,11 @@ function setup() {
 			entities[0].vx = -100;
 		}else if (event.keyCode === 39) {
 			entities[0].vx = 100;
-		}else if (event.keyCode === 32){
+		}else if (event.keyCode === 32 && entities[0].grounded){
 			entities[0].grounded = false;
-			entities[0].vy = -100;
+			entities[0].vy = -300;
+		}else if (event.keyCode === 16){
+			entities[0].rolling = true;
 		}
 	});
 
@@ -33,6 +35,9 @@ function setup() {
 		if (event.keyCode === 37) {
 			entities[0].vx = 0;
 		}else if (event.keyCode === 39) {
+			entities[0].vx = 0;
+		}else if (event.keyCode === 16){
+			entities[0].rolling = false;
 			entities[0].vx = 0;
 		}
 	});
@@ -52,17 +57,38 @@ function setup() {
 		// var e = newEntity(0, 500, 1000, 32);
 		// e.static = true;
 		// entities.push(e);
-		entities.push(newEntity(100, 100, 20, 20));
-		terrain.push(newSegment(10, 200, 400, 300));
+		entities.push(newEntity(100, 100, 40, 80));
+		terrain.push(newSegment(10, 100, 400, 300));
 		entities.push(newEntity(450, 10, 20, 20));
-		terrain.push(newSegment(400, 300, 500, 30));
+		terrain.push(newSegment(400, 300, 410, 302));
+		terrain.push(newSegment(410, 302, 420, 302));
+		terrain.push(newSegment(420, 302, 430, 301));
+		terrain.push(newSegment(430, 301, 440, 295));
+		terrain.push(newSegment(440, 295, 450, 288));
+		terrain.push(newSegment(500, 300, 800, 100));
 	}
 
 	// Match canvas resolution to document dimensions
 	function resize() {
 		if (canvas) {
-			canvas.width = canvas.clientWidth;
-			canvas.height = canvas.clientHeight;
+			var tarWidth = 1920/2;
+			var tarHeight = 1080/2;
+			var width = canvas.clientWidth;
+			var height = canvas.clientHeight;
+			var scaleFitNative = Math.min(width / tarWidth, height / tarHeight);
+			if(scaleFitNative < 1){
+				context.imageSmoothingEnabled = true; // turn it on for low res screens
+			}else{
+				context.imageSmoothingEnabled = false; // turn it off for high res screens.
+			}
+			canvas.width = width;
+			canvas.height = height;
+			context.setTransform(
+				scaleFitNative,0,
+				0,scaleFitNative,
+				0,
+				0
+			);
 		}
 	}
 
@@ -88,6 +114,11 @@ function setup() {
 			drawTerrain(context, t);
 		});
 
+		// context.beginPath();
+		// context.moveTo(entities[0].c.x, entities[0].c.y);
+		// var t = closestPointOnLine(terrain[1], entities[0].c.x, entities[0].c.y);
+		// context.lineTo(t.x, t.y);
+		// context.stroke();
 
 		requestAnimationFrame(render);
 	}

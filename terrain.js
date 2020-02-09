@@ -15,7 +15,7 @@ function newSegment(x1, y1, x2, y2){
     y1: y1,
     x2: x2,
     y2: y2,
-    len: Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2))
+    len: Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2)),
   };
 }
 
@@ -29,35 +29,77 @@ function drawTerrain(context, t){
   context.stroke();
 }
 
-function checkEntityTerrain(e){
+function checkEntityTerrain(e, delta){
   var ret = false;
+  var closestP;
+  var closestD = -1;
+  var l;
   terrain.forEach((line, i) => {
     //check if circle is between ends of line before checking distances
-    if (e.c.x - e.c.r >= line.x1 && e.c.x + e.c.r <= line.x2){
+    if (e.c.x + e.c.r >= line.x1 && e.c.x - e.c.r <= line.x2){
       var cPoint = circleLineCollision(e.c, line);
-      // console.log(cPoint);
-      var distCheck = e.grounded ? (e.c.r * e.c.r + 15) : (e.c.r * e.c.r);
-      // console.log(distCheck);
-      if (Math.pow(cPoint.x - e.c.x, 2) + Math.pow(cPoint.y - e.c.y, 2) < distCheck){
-        ret = true;
-        //circle is too close to line
-        var dirX = cPoint.x - e.c.x;
-        var dirY = Math.abs(cPoint.y - e.c.y);
-        var dist = Math.sqrt(dirX * dirX + dirY*dirY) / e.c.r;
-        //normalize to radius of circle
-        e.c.x = cPoint.x - dirX/dist;
-        e.c.y = cPoint.y - dirY/dist;
-        // e.hitBox.x = cPoint.x - dirX/dist - (e.c.x - e.hitBox.x);
-        // e.hitBox.y = cPoint.y - dirY/dist - (e.c.y - e.hitBox.y);
-        e.hitBox.x = e.c.x - e.hitBox.w/2;
-        e.hitBox.y = e.c.y + e.c.r - e.hitBox.h;
-
-        // e.grounded = true;
-        e.vy = 0;
-        // console.log("connect");
+      var d = Math.pow(cPoint.x - e.c.x, 2) + Math.pow(cPoint.y - e.c.y, 2);
+      if (d < closestD || closestD == -1){
+        closestD = d;
+        closestP = cPoint;
+        l = line;
       }
     }
   });
+  var distCheck = e.grounded ? (e.c.r * e.c.r + 100) : (e.c.r * e.c.r);
+  // console.log(distCheck);
+  if (closestD != -1 && closestD < distCheck){
+    ret = true;
+    //circle is too close to line
+    var dirX = closestP.x - e.c.x;
+    var dirY = Math.abs(closestP.y - e.c.y);
+    var dist = Math.sqrt(dirX * dirX + dirY * dirY) / e.c.r;
+    //normalize to radius of circle
+    e.c.x = closestP.x - dirX/dist;
+    e.c.y = closestP.y - dirY/dist;
+    e.hitBox.x = e.c.x - e.hitBox.w/2;
+    e.hitBox.y = e.c.y + e.c.r - e.hitBox.h;
+    //update rolling velocity
+    if (e.rolling && (e.lastGround != l || !e.grounded)){
+      //handle switching slopes and momentum transfer
+      var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
+      // var vel = {x: e.vx, y: e.vy};
+      var slope = (l.y1 - l.y2) / (l.x2 - l.x1);
+      // var slopeL = (e.lastGround.y1 - e.lastGround.y2) / (e.lastGround.x2 - e.lastGround.x1);
+      var thetaL = Math.atan(slope);
+      var thetaE = -Math.atan2(e.vy, e.vx);
+      // var thetaL1 = Math.atan(slopeL);
+      // console.log("thetaL", thetaL, "thetaE", thetaE, "thetaL1", thetaL);
+      // console.log((Math.abs(thetaE) - Math.abs(thetaL)) / Math.PI/2);
+      var speedTrans = (1.0 - Math.abs((thetaE - (thetaL)) / (Math.PI/2))) * 1.3;
+      speedTrans = speedTrans.clamp(-1.0 , 1.0);
+      // console.log(speedTrans);
+      // var speedTrans = Math.cos(Math.abs((thetaE - thetaL)));
+      if (speedTrans > 1 || speedTrans < -1){
+        console.log(thetaE, thetaL, speedTrans);
+      }
+      // console.log(theta);
+      e.vy = (speed * speedTrans) * Math.sin(Math.abs(thetaL)) * (slope > 0 ? -1 : 1);
+      e.vx = (speed * speedTrans) * Math.cos(thetaL);// * (slope > 0 ? -1 : 1);;// * (e.vx > 0 ? -1 : 1);// * (e.vx < 0 ? -1 : 1);// * (slope < 0 ? -1 : 1);// * (e.vx < 0 ? -1 : 1);
+      // console.log("vx", e.vx, "vy", e.vy);
+      // console.log(e.vy);
+      // e.vx =
+    } else if (e.rolling && e.grounded){
+      //transfer verticle to horizontal
+      var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
+      var slope = (l.y1 - l.y2) / (l.x2 - l.x1);
+      var theta = Math.atan(slope);
+      var yChange = gravity * delta * -Math.sin(theta);
+      if (slope != 0){
+        e.vy += yChange * (slope > 0 ? -1 : 1);
+        e.vx += yChange / slope * (slope < 0 ? -1 : 1);//* Math.cos(theta);// * (e.vx < 0 ? -1 : 1);
+      }
+    }else if (!e.rolling){
+      e.vy = 0;
+    }
+    e.lastGround = l;
+    // e.vy = e.rolling ? e.vy : 0;
+  }
   return ret;
 
 }
@@ -65,10 +107,14 @@ function checkEntityTerrain(e){
 function closestPointOnLine(l, x, y){
   var dot = (((x-l.x1)*(l.x2-l.x1)) + ((y-l.y1)*(l.y2-l.y1))) / Math.pow(l.len, 2);
   return {
-    x: l.x1 + (dot * (l.x2 - l.x1)),
-    y: l.y1 + (dot * (l.y2 - l.y1))
+    x: (l.x1 + (dot * (l.x2 - l.x1))).clamp(l.x1, l.x2),
+    y: (l.y1 + (dot * (l.y2 - l.y1))).clamp(Math.min(l.y1, l.y2), Math.max(l.y1, l.y2))
   };
 }
+
+Number.prototype.clamp = function(min, max) {
+  return Math.min(Math.max(this, min), max);
+};
 
 function circleLineCollision(c, l){
   // if (pointCircleCollision(c, l.x1, l.y1) ||
