@@ -94,7 +94,6 @@ function setup() {
 
 	// Render loop called once per frame
 	function render() {
-
 		var now = Date.now();
 		var delta = (now - lastTime) / 1000.0;
 		lastTime = now;
@@ -103,7 +102,7 @@ function setup() {
 			update(entity, delta);
 		});
 
-
+		context.clearRect(0, 0, canvas.width, canvas.height);
 
 		const placeholder = getSpriteFrame("character/placeholder");
 		context.drawImage(placeholder, 0, 0, 500, 500);
