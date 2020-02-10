@@ -47,20 +47,22 @@ function setupLevel(){
 	terrain.push(newSegment(440, 295, 450, 288));
 	terrain.push(newSegment(500, 300, 800, 100));
 	terrain.push(newSegment(0, 400, 1000, 400));
-	terrain.push(newSegment(800, 100, 850, 600));
+	terrain.push(newSegment(800, 100, 950, 400));
 
 	var t1 = newSegment(800, 400, 1000, 300);
 	var t2 = newSegment(1100, 300, 1300, 400);
 	terrain.push(t1);
 	curveBetween(t1, t2, 10);
 	terrain.push(t2);
+
+	terrain.push(newSegment(1200, 10, 1200, 500));
 }
 
 // Match canvas resolution to document dimensions
 function resize() {
 	if (canvas) {
-		var tarWidth = 1920;
-		var tarHeight = 1080;
+		var tarWidth = 1920/2;
+		var tarHeight = 1080/2;
 		var width = canvas.clientWidth;
 		var height = canvas.clientHeight;
 		var scaleFitNative = Math.min(width / tarWidth, height / tarHeight);

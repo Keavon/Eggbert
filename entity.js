@@ -1,6 +1,6 @@
 
 const ANIMATION_FPS = 30;
-const gravity = 500;
+const gravity = 2000;
 
 function newEntity(x = 0, y = 0, w = 0, h = 0){
   return {
@@ -63,11 +63,14 @@ function update(entity, delta, onCollision = null){
   entity.hitBox.x += entity.vx * delta;
   entity.hitBox.y += entity.vy * delta;
 
+  //in case of clipping through terrain
+  var prevPos = {x: entity.c.x, y: entity.c.y};
+
   entity.c.x = entity.hitBox.x + entity.hitBox.w/2;
   entity.c.y = entity.hitBox.y + entity.hitBox.h - entity.c.r;
   // console.log(entity.c.r);
 
-  entity.grounded = checkEntityTerrain(entity, delta);
+  entity.grounded = checkEntityTerrain(entity, delta, prevPos);
   // if (onCollision != null){
   entities.forEach(e => {
     if (collides(entity, e) && entity != e){

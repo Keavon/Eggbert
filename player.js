@@ -33,7 +33,7 @@ function updatePlayer(delta){
 }
 
 function setupPlayer(){
-  player = newEntity(100, 50, 40, 80);
+  player = newEntity(100, 50, 40, 8);
   entities.push(player); // add to update/collision list
 
   document.addEventListener("keydown", event => {
@@ -51,7 +51,7 @@ function setupPlayer(){
       case "Space":
       if (player.grounded){
         player.grounded = false;
-        player.vy = -300;
+        player.vy = -650;
       }
       break;
       case "ShiftLeft":
