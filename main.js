@@ -47,7 +47,10 @@ function setupLevel(){
 	terrain.push(newSegment(440, 295, 450, 288));
 	terrain.push(newSegment(500, 300, 800, 100));
 	terrain.push(newSegment(0, 400, 1000, 400));
-	terrain.push(newSegment(800, 100, 850, 600))
+	terrain.push(newSegment(800, 100, 850, 600));
+
+	terrain.push(newSegment(800, 400, 1000, 300));
+	terrain.push(newSegment(1000, 300, 1200,400));
 }
 
 // Match canvas resolution to document dimensions

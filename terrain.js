@@ -61,8 +61,8 @@ function checkEntityTerrain(e, delta){
     e.c.y = closestP.y - dirY/dist;
     e.hitBox.x = e.c.x - e.hitBox.w/2;
     e.hitBox.y = e.c.y + e.c.r - e.hitBox.h;
-		ret = dirY > 0;
-		if (!ret){
+		ret = dirY > 0 && e.c.x >= l.x1 && e.c.x <= l.x2;
+		if (dirY <= 0){
 			e.vy = e.vy < 0 ? 0 : e.vy;
 			return ret; //ceiling collision
 		}
