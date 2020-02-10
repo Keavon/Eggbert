@@ -33,7 +33,7 @@ function updatePlayer(delta){
 }
 
 function setupPlayer(){
-  player = newEntity(100, 50, 40, 8);
+  player = newEntity(100, 50, 40, 80);
   entities.push(player); // add to update/collision list
 
   document.addEventListener("keydown", event => {

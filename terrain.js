@@ -120,6 +120,9 @@ function checkEntityTerrain(e, delta, prevPos){
       }
     }
   });
+  if (l == null){
+    return ret;
+  }
 
   //recalc points and distance in case of extra clip
   closestP = circleLineCollision(e.c, l);
