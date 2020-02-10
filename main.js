@@ -49,15 +49,18 @@ function setupLevel(){
 	terrain.push(newSegment(0, 400, 1000, 400));
 	terrain.push(newSegment(800, 100, 850, 600));
 
-	terrain.push(newSegment(800, 400, 1000, 300));
-	terrain.push(newSegment(1000, 300, 1200,400));
+	var t1 = newSegment(800, 400, 1000, 300);
+	var t2 = newSegment(1100, 300, 1300, 400);
+	terrain.push(t1);
+	curveBetween(t1, t2, 10);
+	terrain.push(t2);
 }
 
 // Match canvas resolution to document dimensions
 function resize() {
 	if (canvas) {
-		var tarWidth = 1920/2;
-		var tarHeight = 1080/2;
+		var tarWidth = 1920;
+		var tarHeight = 1080;
 		var width = canvas.clientWidth;
 		var height = canvas.clientHeight;
 		var scaleFitNative = Math.min(width / tarWidth, height / tarHeight);
@@ -82,6 +85,8 @@ function render() {
 	var now = Date.now();
 	var delta = (now - lastTime) / 1000.0;
 	lastTime = now;
+
+
 
 	updatePlayer(delta);
 	entities.forEach((entity, i) => {
