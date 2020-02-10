@@ -47,7 +47,7 @@ function checkEntityTerrain(e, delta){
       }
     }
   });
-  var distCheck = e.grounded ? (e.c.r * e.c.r + WALK_SPEED) : (e.c.r * e.c.r);
+  var distCheck = e.grounded ? (e.c.r * e.c.r + WALK_SPEED/1.5) : (e.c.r * e.c.r);
   // console.log(distCheck);
   if (closestD != -1 && closestD < distCheck){
     // ret = true;
