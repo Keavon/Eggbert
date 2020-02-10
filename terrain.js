@@ -16,6 +16,7 @@ function newSegment(x1, y1, x2, y2){
     x2: x2,
     y2: y2,
     len: Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2)),
+    slope: (y1 - y2) / (x2 - x1),
   };
 }
 
@@ -46,10 +47,11 @@ function checkEntityTerrain(e, delta){
       }
     }
   });
-  var distCheck = e.grounded ? (e.c.r * e.c.r + 100) : (e.c.r * e.c.r);
+  var distCheck = e.grounded ? (e.c.r * e.c.r + WALK_SPEED) : (e.c.r * e.c.r);
   // console.log(distCheck);
   if (closestD != -1 && closestD < distCheck){
     // ret = true;
+    e.debugP = closestP;
     //circle is too close to line
     var dirX = closestP.x - e.c.x;
     var dirY = closestP.y - e.c.y;//Math.abs(closestP.y - e.c.y);
@@ -69,9 +71,9 @@ function checkEntityTerrain(e, delta){
       //handle switching slopes and momentum transfer
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
       // var vel = {x: e.vx, y: e.vy};
-      var slope = (l.y1 - l.y2) / (l.x2 - l.x1);
+      // var slope = (l.y1 - l.y2) / (l.x2 - l.x1);
       // var slopeL = (e.lastGround.y1 - e.lastGround.y2) / (e.lastGround.x2 - e.lastGround.x1);
-      var thetaL = Math.atan(slope);
+      var thetaL = Math.atan(l.slope);
       var thetaE = -Math.atan2(e.vy, e.vx);
       // var thetaL1 = Math.atan(slopeL);
       // console.log("thetaL", thetaL, "thetaE", thetaE, "thetaL1", thetaL);
@@ -80,7 +82,7 @@ function checkEntityTerrain(e, delta){
       speedTrans = speedTrans.clamp(-1.0 , 1.0);
       // console.log(speedTrans);
       // console.log(theta);
-      e.vy = (speed * speedTrans) * Math.sin(Math.abs(thetaL)) * (slope > 0 ? -1 : 1);
+      e.vy = (speed * speedTrans) * Math.sin(Math.abs(thetaL)) * (l.slope > 0 ? -1 : 1);
       e.vx = (speed * speedTrans) * Math.cos(thetaL);// * (slope > 0 ? -1 : 1);;// * (e.vx > 0 ? -1 : 1);// * (e.vx < 0 ? -1 : 1);// * (slope < 0 ? -1 : 1);// * (e.vx < 0 ? -1 : 1);
       // console.log("vx", e.vx, "vy", e.vy);
       // console.log(e.vy);
@@ -88,12 +90,12 @@ function checkEntityTerrain(e, delta){
     } else if (e.rolling && e.grounded){
       //transfer verticle to horizontal
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
-      var slope = (l.y1 - l.y2) / (l.x2 - l.x1);
-      var theta = Math.atan(slope);
+      // var slope = (l.y1 - l.y2) / (l.x2 - l.x1);
+      var theta = Math.atan(l.slope);
       var yChange = gravity * delta * -Math.sin(theta);
-      if (slope != 0){
-        e.vy += yChange * (slope > 0 ? -1 : 1);
-        e.vx += yChange / slope * (slope < 0 ? -1 : 1);//* Math.cos(theta);// * (e.vx < 0 ? -1 : 1);
+      if (l.slope != 0){
+        e.vy += yChange * (l.slope > 0 ? -1 : 1);
+        e.vx += yChange / l.slope * (l.slope < 0 ? -1 : 1);//* Math.cos(theta);// * (e.vx < 0 ? -1 : 1);
       }
     }else if (!e.rolling){
       e.vy = 0;
