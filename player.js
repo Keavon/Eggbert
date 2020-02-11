@@ -51,7 +51,7 @@ function setupPlayer(){
       case "Space":
       if (player.grounded){
         player.grounded = false;
-        player.vy = -650;
+        player.vy = -700;
       }
       break;
       case "ShiftLeft":

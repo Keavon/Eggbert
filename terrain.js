@@ -131,7 +131,6 @@ function checkEntityTerrain(e, delta, prevPos){
 
   //check if the point is within the range check
   if (closestD != -1 && closestD < distCheck){
-    e.debugP = closestP;
     // if (iP != null){
     //   console.log("adjusting after clip");
     // }
@@ -173,7 +172,7 @@ function checkEntityTerrain(e, delta, prevPos){
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
       // var theta = Math.atan(l.slope);
       var theta = Math.atan2(l.y1 - l.y2, l.x2 - l.x1);
-      var yChange = gravity * delta * -Math.sin(theta);
+      var yChange = gravity * .5 * delta * -Math.sin(theta);
       if (l.slope != 0){
         e.vy += yChange * (l.slope > 0 ? -1 : 1);
         e.vx += yChange / l.slope * (l.slope < 0 ? -1 : 1);
@@ -183,34 +182,37 @@ function checkEntityTerrain(e, delta, prevPos){
       e.vy = 0;
     }
     //track the last terrain the entity was touching
-    e.lastGround = l;
-  }
-  return ret;
+		if (ret){
+			e.lastGround = l;
+			e.debugP = closestP;
+		}
+	}
+	return ret;
 
 }
 
 function closestPointOnLine(l, x, y){
-  var dot = (((x-l.x1)*(l.x2-l.x1)) + ((y-l.y1)*(l.y2-l.y1))) / Math.pow(l.len, 2);
-  return {
-    x: (l.x1 + (dot * (l.x2 - l.x1))).clamp(l.x1, l.x2),
-    y: (l.y1 + (dot * (l.y2 - l.y1))).clamp(Math.min(l.y1, l.y2), Math.max(l.y1, l.y2))
-  };
+	var dot = (((x-l.x1)*(l.x2-l.x1)) + ((y-l.y1)*(l.y2-l.y1))) / Math.pow(l.len, 2);
+	return {
+		x: (l.x1 + (dot * (l.x2 - l.x1))).clamp(l.x1, l.x2),
+		y: (l.y1 + (dot * (l.y2 - l.y1))).clamp(Math.min(l.y1, l.y2), Math.max(l.y1, l.y2))
+	};
 }
 
 Number.prototype.clamp = function(min, max) {
-  return Math.min(Math.max(this, min), max);
+	return Math.min(Math.max(this, min), max);
 };
 
 function circleLineCollision(c, l){
-  // if (pointCircleCollision(c, l.x1, l.y1) ||
-  //     pointCircleCollision(c, l.x2, l.y2)){
-  //     return true;
-  // }
-  return closestPointOnLine(l, c.x, c.y);
+	// if (pointCircleCollision(c, l.x1, l.y1) ||
+	//     pointCircleCollision(c, l.x2, l.y2)){
+	//     return true;
+	// }
+	return closestPointOnLine(l, c.x, c.y);
 }
 
 function pointCircleCollision(c, x, y){
-  if (Math.pow(c.x - x, 2) + Math.pow(c.y - y, 2) <= c.r*c.r){
-    return true;
-  }
+	if (Math.pow(c.x - x, 2) + Math.pow(c.y - y, 2) <= c.r*c.r){
+		return true;
+	}
 }
