@@ -2,12 +2,13 @@ document.addEventListener("DOMContentLoaded", setup);
 
 let canvas;
 let context;
+let scaleFitNative;
 
 let entities = [];
 let player;
 let lastTime;
 
-let drawDebug = false;
+let drawDebug = true;
 
 function preloadSprites() {
 	return Promise.all([
@@ -65,7 +66,7 @@ function resize() {
 		var tarHeight = 1080/2;
 		var width = canvas.clientWidth;
 		var height = canvas.clientHeight;
-		var scaleFitNative = Math.min(width / tarWidth, height / tarHeight);
+		scaleFitNative = Math.min(width / tarWidth, height / tarHeight);
 		if(scaleFitNative < 1){
 			context.imageSmoothingEnabled = false; // turn it on for low res screens
 		}else{
@@ -95,7 +96,19 @@ function render() {
 		update(entity, delta);
 	});
 
-	context.clearRect(0, 0, canvas.width, canvas.height);
+	var canvasOffset = {
+		x: -player.c.x * scaleFitNative + canvas.width/2,
+		y: -player.c.y * scaleFitNative + canvas.height/2
+	}
+	context.setTransform(
+			scaleFitNative,0,
+			0,scaleFitNative,
+			canvasOffset.x,
+			canvasOffset.y
+		);
+
+		// context.clearRect(0, 0, canvas.width, canvas.height);
+	context.clearRect(-canvasOffset.x / scaleFitNative, -	canvasOffset.y / scaleFitNative, canvas.width, canvas.height);
 
 	const placeholder = getSpriteFrame("character/placeholder");
 	context.drawImage(placeholder, 0, 0, 500, 500);
