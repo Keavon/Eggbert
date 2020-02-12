@@ -10,6 +10,7 @@ let lastTime;
 
 let drawDebug = true;
 
+let screenText = "";
 
 
 function preloadSprites() {
@@ -26,6 +27,11 @@ function preloadSprites() {
 	]);
 }
 
+function message(t){
+	screenText = t;
+	setTimeout(() => {screenText = "";}, 5000);
+}
+
 // Prepare for then execute render loop
 function setup() {
 	// Get canvas
@@ -40,6 +46,7 @@ function setup() {
 	preloadSprites().then(() => {
 		setupLevel().then(() => {
 			lastTime = Date.now();
+			message("Find a way to break out of your shell!");
 			render();
 		});
 	});
@@ -179,7 +186,10 @@ function render() {
 	if (pause){
 		rollCredits(delta);
 	}
-
+	context.font = "30px Comic Sans MS";
+	context.fillStyle = "red";
+	context.textAlign = "center";
+	context.fillText(screenText, 600 - canvasOffset.x / scaleFitNative, 200 - canvasOffset.y / scaleFitNative);
 
 	requestAnimationFrame(render);
 }
