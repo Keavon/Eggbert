@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", setup);
+// document.addEventListener("DOMContentLoaded", setup);
 
 let canvas;
 let context;
@@ -40,13 +40,13 @@ function setupLevel(){
 	// entities.push(e);
 	setupPlayer();
 	terrain.push(newSegment(10, 100, 400, 300));
-	entities.push(newEntity(450, 10, 20, 20));
+	entities.push(newEntity(1150, 10, 20, 20));
 	terrain.push(newSegment(400, 300, 410, 302));
 	terrain.push(newSegment(410, 302, 420, 302));
 	terrain.push(newSegment(420, 302, 430, 301));
 	terrain.push(newSegment(430, 301, 440, 295));
 	terrain.push(newSegment(440, 295, 450, 288));
-	terrain.push(newSegment(500, 300, 800, 100));
+	terrain.push(newSegment(500, 300, 800, 100, true));
 	terrain.push(newSegment(0, 400, 1000, 400));
 	terrain.push(newSegment(800, 100, 950, 400));
 
@@ -91,33 +91,39 @@ function render() {
 
 
 
-	updatePlayer(delta);
-	entities.forEach((entity, i) => {
-		update(entity, delta);
-	});
+	if (!pause){
+		updatePlayer(delta);
+		entities.forEach((entity, i) => {
+			update(entity, delta);
+		});
+	}
 
 	var canvasOffset = {
 		x: -player.c.x * scaleFitNative + canvas.width/2,
 		y: -player.c.y * scaleFitNative + canvas.height/2
 	}
 	context.setTransform(
-			scaleFitNative,0,
-			0,scaleFitNative,
-			canvasOffset.x,
-			canvasOffset.y
-		);
+		scaleFitNative,0,
+		0,scaleFitNative,
+		canvasOffset.x,
+		canvasOffset.y
+	);
 
-		// context.clearRect(0, 0, canvas.width, canvas.height);
+	// context.clearRect(0, 0, canvas.width, canvas.height);
 	context.clearRect(-canvasOffset.x / scaleFitNative, -	canvasOffset.y / scaleFitNative, canvas.width, canvas.height);
 
-	const placeholder = getSpriteFrame("character/placeholder");
-	context.drawImage(placeholder, 0, 0, 500, 500);
+	// const placeholder = getSpriteFrame("character/placeholder");
+	// context.drawImage(placeholder, 0, 0, 500, 500);
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);
 	});
 	terrain.forEach((t, i) => {
 		drawTerrain(context, t);
 	});
+
+	if (pause){
+		rollCredits(delta);
+	}
 
 
 	requestAnimationFrame(render);

@@ -2,6 +2,7 @@
 let left = false;
 let right = false;
 let rightLast = false; //which button was pressed last
+let shellIntegrity = 100;
 
 const ROLL_ACCEL = 100;
 const WALK_SPEED = 200;
@@ -34,6 +35,9 @@ function updatePlayer(delta){
 
 function setupPlayer(){
   player = newEntity(100, 50, 40, 80);
+  // player = newEntity(1150, -2500, 40, 80);
+  player.type = "player";
+  player.mask = [0];
   entities.push(player); // add to update/collision list
 
   document.addEventListener("keydown", event => {
@@ -66,6 +70,8 @@ function setupPlayer(){
       case "KeyX":
       drawDebug = !drawDebug;
       break;
+      case "KeyC":
+      rollCredits(0);
     }
   });
   document.addEventListener("keyup", event => {
