@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", menu);
 
 function menu(){
   // console.log("hello");
-  document.querySelector(".play").addEventListener("click", startGame);
+  document.querySelector("#play").addEventListener("click", startGame);
 }
 
 function startGame(){

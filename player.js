@@ -4,6 +4,12 @@ let right = false;
 let rightLast = false; //which button was pressed last
 let shellIntegrity = 100;
 
+let sounds = {
+  roll: "rolling.wav",
+  crack: "crack.wav",
+  jump: "jump.wav"
+}
+
 const ROLL_ACCEL = 100;
 const WALK_SPEED = 200;
 
@@ -38,6 +44,9 @@ function setupPlayer(){
   // player = newEntity(1150, -2500, 40, 80);
   player.type = "player";
   player.mask = [0];
+  Object.keys(sounds).forEach((key) => {
+    sounds[key] = new sound(sounds[key]);
+  })
   entities.push(player); // add to update/collision list
 
   document.addEventListener("keydown", event => {
@@ -90,4 +99,19 @@ function setupPlayer(){
     }
   });
 
+}
+
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function(){
+    this.sound.play();
+  }
+  this.stop = function(){
+    this.sound.pause();
+  }
 }

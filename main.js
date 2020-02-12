@@ -10,6 +10,8 @@ let lastTime;
 
 let drawDebug = true;
 
+
+
 function preloadSprites() {
 	return Promise.all([
 		loadSprite("character/placeholder"),

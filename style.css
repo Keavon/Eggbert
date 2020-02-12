@@ -12,3 +12,25 @@ canvas {
 .hidden {
 	display: none;
 }
+
+.menu{
+	width: 30%;
+	height: 50%;
+	text-align: center;
+	vertical-align: middle;
+	padding: 5px 35% 5px 35%;
+}
+
+.menuElement{
+	font-size: 50px;
+	background-color: #88aacc;
+	padding: 5px 50px 5px 50px;
+	margin: 5px 5px 5px 5px;
+	border-radius: 2px;
+	display: block;
+	cursor: pointer;
+}
+
+.menuElement:hover{
+	background-color: #aaccee;
+}
