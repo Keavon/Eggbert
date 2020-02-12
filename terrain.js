@@ -21,7 +21,7 @@ function newSegment(x1, y1, x2, y2, oneWay){
   };
 }
 
-function curveBetween(l1, l2, segs = 10){
+function curveBetween(l1, l2, oneWay = false, segs = 10){
   var p0 = {x: l1.x2, y: l1.y2};
   var p1 = {x: l2.x1, y: l2.y1};
   var iP = lineIntersection(l1, l2); //intersection point
@@ -32,11 +32,11 @@ function curveBetween(l1, l2, segs = 10){
     var it = 1 - t;
     var x = it * it * p0.x + 2 * it * t * iP.x + t * t * p1.x;
     var y = it * it * p0.y + 2 * it * t * iP.y + t * t * p1.y;
-    terrain.push(newSegment(lastP.x, lastP.y, x, y));
+    terrain.push(newSegment(lastP.x, lastP.y, x, y, oneWay));
     lastP.x = x;
     lastP.y = y;
   }
-  terrain.push(newSegment(lastP.x, lastP.y, p1.x, p1.y));
+  terrain.push(newSegment(lastP.x, lastP.y, p1.x, p1.y, oneWay));
 }
 
 function lineIntersection(l1, l2, inf = true){

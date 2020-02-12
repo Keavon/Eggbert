@@ -48,12 +48,12 @@ function setupLevel(){
 	terrain.push(newSegment(440, 295, 450, 288));
 	terrain.push(newSegment(500, 300, 800, 100, true));
 	terrain.push(newSegment(0, 400, 1000, 400));
-	terrain.push(newSegment(800, 100, 950, 400));
+	terrain.push(newSegment(800, 100, 950, 400, true));
 
 	var t1 = newSegment(800, 400, 1000, 300);
 	var t2 = newSegment(1100, 300, 1300, 400);
 	terrain.push(t1);
-	curveBetween(t1, t2, 10);
+	curveBetween(t1, t2, false, 10);
 	terrain.push(t2);
 
 	terrain.push(newSegment(1200, 10, 1200, 500));
