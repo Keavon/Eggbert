@@ -41,7 +41,7 @@ function setupLevel(){
 	setupPlayer();
 	//this is an invisible entity which yields control to the player at the start
 	//of the game
-	var e = newEntity(400, 200, 10, 10);
+	var e = newEntity(300, 200, 10, 10);
 	e.type = "controlTrigger";
 	entities.push(e);
 
@@ -74,7 +74,7 @@ function setupLevel(){
 
 function loadTerrain(data){
 	const TERRAIN_SCALE = 100;
-	const TERRAIN_OFFSET = {x: 3400, y: 100};
+	const TERRAIN_OFFSET = {x: 3000, y: 400};
 	var vertices;
 	var vertexMatches = data.match(/^v( -?\d+(\.\d+)?){3}$/gm);
 	if (vertexMatches)
@@ -100,8 +100,8 @@ function loadTerrain(data){
 			v.forEach((a, i) => {
 				v[i] = parseInt(a) - 1;
 			});
-			terrain.push(newSegment(vertices[v[0]][0] + TERRAIN_OFFSET.x, vertices[v[0]][1] + TERRAIN_OFFSET.y,
-				vertices[v[1]][0] + TERRAIN_OFFSET.x, vertices[v[1]][1] + TERRAIN_OFFSET.y, true));
+			terrain.push(newSegment(vertices[v[0]][0] + TERRAIN_OFFSET.x, -vertices[v[0]][1] + TERRAIN_OFFSET.y,
+				vertices[v[1]][0] + TERRAIN_OFFSET.x, -vertices[v[1]][1] + TERRAIN_OFFSET.y, true));
 		});
 	}
 }
