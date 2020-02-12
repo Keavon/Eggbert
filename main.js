@@ -14,7 +14,15 @@ let drawDebug = true;
 
 function preloadSprites() {
 	return Promise.all([
-		loadSprite("character/placeholder"),
+		// loadSprite("character/run/left", 6),
+		// loadSprite("character/run/right", 6),
+		loadSprite("character/run/run", 6),
+		loadSprite("character/idle/idle1", 4),
+		loadSprite("character/idle/idle2", 4),
+		loadSprite("character/roll/roll", 2),
+		loadSprite("character/jump/jump", 4),
+		loadSprite("character/fall/fall", 2),
+
 	]);
 }
 
