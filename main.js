@@ -30,35 +30,80 @@ function setup() {
 
 	// Preload game assets then begin render loop
 	preloadSprites().then(() => {
-		setupLevel();
-		lastTime = Date.now();
-		render();
+		setupLevel().then(() => {
+			lastTime = Date.now();
+			render();
+		});
 	});
 }
 
 function setupLevel(){
-	// var e = newEntity(0, 500, 1000, 32);
-	// e.static = true;
-	// entities.push(e);
 	setupPlayer();
-	terrain.push(newSegment(10, 100, 400, 300));
+	//this is an invisible entity which yields control to the player at the start
+	//of the game
+	var e = newEntity(400, 200, 10, 10);
+	e.type = "controlTrigger";
+	entities.push(e);
+
+	//add rocks here!
 	entities.push(newEntity(1150, 10, 20, 20));
-	terrain.push(newSegment(400, 300, 410, 302));
-	terrain.push(newSegment(410, 302, 420, 302));
-	terrain.push(newSegment(420, 302, 430, 301));
-	terrain.push(newSegment(430, 301, 440, 295));
-	terrain.push(newSegment(440, 295, 450, 288));
-	terrain.push(newSegment(500, 300, 800, 100, true));
-	terrain.push(newSegment(0, 400, 1000, 400));
-	terrain.push(newSegment(800, 100, 950, 400, true));
 
-	var t1 = newSegment(800, 400, 1000, 300);
-	var t2 = newSegment(1100, 300, 1300, 400);
-	terrain.push(t1);
-	curveBetween(t1, t2, false, 10);
-	terrain.push(t2);
+	//generate terrain from mesh
+	return fetch('assets/terrain.obj', {mode: 'no-cors'})
+	.then(response => response.text())
+	.then(data => loadTerrain(data));
+	// loadTerrain('assets/terrain.obj');
+	// terrain.push(newSegment(10, 100, 400, 300));
+	// terrain.push(newSegment(400, 300, 410, 302));
+	// terrain.push(newSegment(410, 302, 420, 302));
+	// terrain.push(newSegment(420, 302, 430, 301));
+	// terrain.push(newSegment(430, 301, 440, 295));
+	// terrain.push(newSegment(440, 295, 450, 288));
+	// terrain.push(newSegment(500, 300, 800, 100, true));
+	// terrain.push(newSegment(0, 400, 1000, 400));
+	// terrain.push(newSegment(800, 100, 950, 400, true));
+	//
+	// var t1 = newSegment(800, 400, 1000, 300);
+	// var t2 = newSegment(1100, 300, 1300, 400);
+	// terrain.push(t1);
+	// curveBetween(t1, t2, false, 10);
+	// terrain.push(t2);
+	// terrain.push(newSegment(1200, 10, 1200, 500));
 
-	terrain.push(newSegment(1200, 10, 1200, 500));
+}
+
+function loadTerrain(data){
+	const TERRAIN_SCALE = 100;
+	const TERRAIN_OFFSET = {x: 3400, y: 100};
+	var vertices;
+	var vertexMatches = data.match(/^v( -?\d+(\.\d+)?){3}$/gm);
+	if (vertexMatches)
+	{
+		vertices = vertexMatches.map(function(vertex)
+		{
+			var vertices = vertex.split(" ");
+			vertices.shift();
+			vertices.forEach((v, i) => {
+				vertices[i] = parseFloat(v) * TERRAIN_SCALE;
+			});
+
+			return vertices;
+		});
+	}
+	var lineMatches = data.match(/^l( \d+){2}$/gm);
+	if (lineMatches)
+	{
+		lineMatches.map(function(vertex)
+		{
+			var v = vertex.split(" ");
+			v.shift();
+			v.forEach((a, i) => {
+				v[i] = parseInt(a) - 1;
+			});
+			terrain.push(newSegment(vertices[v[0]][0] + TERRAIN_OFFSET.x, vertices[v[0]][1] + TERRAIN_OFFSET.y,
+				vertices[v[1]][0] + TERRAIN_OFFSET.x, vertices[v[1]][1] + TERRAIN_OFFSET.y, true));
+		});
+	}
 }
 
 // Match canvas resolution to document dimensions

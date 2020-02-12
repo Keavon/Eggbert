@@ -180,10 +180,10 @@ function checkEntityTerrain(e, delta, prevPos){
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
       // var theta = Math.atan(l.slope);
       var theta = Math.atan2(l.y1 - l.y2, l.x2 - l.x1);
-      var yChange = gravity * .5 * delta * -Math.sin(theta);
+      var yChange = gravity * delta * -Math.sin(theta);
       if (l.slope != 0){
         e.vy += yChange * (l.slope > 0 ? -1 : 1);
-        e.vx += yChange / l.slope * (l.slope < 0 ? -1 : 1);
+        e.vx += yChange * Math.cos(theta);// * (l.slope < 0 ? -1 : 1);
       }
     }else if (!e.rolling){
       //no roll, just stop the entity from falling

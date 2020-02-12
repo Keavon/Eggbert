@@ -1,4 +1,5 @@
 
+let control = false;
 let left = false;
 let right = false;
 let rightLast = false; //which button was pressed last
@@ -48,8 +49,12 @@ function setupPlayer(){
     sounds[key] = new sound(sounds[key]);
   })
   entities.push(player); // add to update/collision list
+  player.rolling = true;
 
   document.addEventListener("keydown", event => {
+    if (!control){
+      return;
+    }
     switch (event.code){
       case "KeyA":
       case "ArrowLeft":
@@ -84,6 +89,9 @@ function setupPlayer(){
     }
   });
   document.addEventListener("keyup", event => {
+    if (!control){
+      return;
+    }
     switch(event.code){
       case "KeyA":
       case "ArrowLeft":

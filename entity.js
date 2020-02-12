@@ -92,6 +92,10 @@ function update(entity, delta, onCollision = null){
           if (shellIntegrity <= 0){
             // winGame();
           }
+        } else if (entity.type == "player" && e.type == "controlTrigger"){
+          control = true;
+          player.rolling = false;
+          e.layer = -1;
         }
         // console.log("collision");
         if (e.static){
@@ -110,7 +114,7 @@ function update(entity, delta, onCollision = null){
   function drawEntity(entity, context){
     context.fillStyle = 'green';
     if (entity.img == null){
-      context.fillRect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox.h);
+      // context.fillRect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox.h);
     }else{
       context.drawImage(getSpriteFrame(entity.img, entity.frame), entity.hitBox.x, entity.hitBox.y);
     }
