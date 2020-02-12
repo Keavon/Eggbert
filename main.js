@@ -52,7 +52,6 @@ function setupLevel(){
 	return fetch('assets/terrain.obj', {mode: 'no-cors'})
 	.then(response => response.text())
 	.then(data => loadTerrain(data));
-	// loadTerrain('assets/terrain.obj');
 	// terrain.push(newSegment(10, 100, 400, 300));
 	// terrain.push(newSegment(400, 300, 410, 302));
 	// terrain.push(newSegment(410, 302, 420, 302));
@@ -69,8 +68,7 @@ function setupLevel(){
 	// curveBetween(t1, t2, false, 10);
 	// terrain.push(t2);
 	// terrain.push(newSegment(1200, 10, 1200, 500));
-
-}
+	}
 
 function loadTerrain(data){
 	const TERRAIN_SCALE = 100;
@@ -157,16 +155,18 @@ function render() {
 	);
 
 	// context.clearRect(0, 0, canvas.width, canvas.height);
-	context.clearRect(-canvasOffset.x / scaleFitNative, -	canvasOffset.y / scaleFitNative, canvas.width, canvas.height);
+	context.clearRect(-canvasOffset.x / scaleFitNative, -	canvasOffset.y / scaleFitNative, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
 
 	// const placeholder = getSpriteFrame("character/placeholder");
 	// context.drawImage(placeholder, 0, 0, 500, 500);
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);
 	});
-	terrain.forEach((t, i) => {
-		drawTerrain(context, t);
-	});
+	if (drawDebug){
+		terrain.forEach((t, i) => {
+			drawTerrain(context, t);
+		});
+	}
 
 	if (pause){
 		rollCredits(delta);

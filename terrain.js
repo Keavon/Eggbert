@@ -99,7 +99,7 @@ function checkEntityTerrain(e, delta, prevPos){
     if (Math.max(e.c.x, prevPos.x) + e.c.r >= line.x1 && Math.min(e.c.x, prevPos.x) - e.c.r <= line.x2){
       //check if entity clipped through segment this frame
       var iP = lineIntersection(line, newSegment(prevPos.x, prevPos.y, e.c.x, e.c.y), false);
-      if (iP != null && (!line.oneWay || e.vy > 0)){
+      if (iP != null && (!line.oneWay || (e.vy > 0 && !e.grounded))){
         //entity center clipped through line, move back
         // console.log("clipped");
         var xD = e.c.x - prevPos.x;
@@ -152,7 +152,7 @@ function checkEntityTerrain(e, delta, prevPos){
     if (dirY < 0 && (l.x1 - l.x2 != 0) && !l.oneWay){
       e.vy = e.vy < 0 ? 0 : e.vy;
       return ret; //ceiling collision
-    } else if ((dirY <= 0 || e.lastGround != l) && e.vy < 0 && l.oneWay){
+    } else if ((dirY <= 0 || e.lastGround != l) && e.vy < 0 && l.oneWay && !e.grounded){
       e.c.x = lastPos.x;
       e.c.y = lastPos.y;
       e.hitBox.x = e.c.x - e.hitBox.w/2;
@@ -180,47 +180,51 @@ function checkEntityTerrain(e, delta, prevPos){
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
       // var theta = Math.atan(l.slope);
       var theta = Math.atan2(l.y1 - l.y2, l.x2 - l.x1);
-      var yChange = gravity * delta * -Math.sin(theta);
+      var yChange = gravity * delta * Math.sin(Math.abs(theta));
       if (l.slope != 0){
-        e.vy += yChange * (l.slope > 0 ? -1 : 1);
-        e.vx += yChange * Math.cos(theta);// * (l.slope < 0 ? -1 : 1);
+        e.vy += yChange * Math.sin(Math.abs(theta));// * (l.slope > 0 ? -1 : 1);
+        e.vx += yChange * Math.cos(theta) * (l.slope < 0 ? 1 : -1);
       }
-    }else if (!e.rolling){
-      //no roll, just stop the entity from falling
-      e.vy = 0;
-    }
-    //track the last terrain the entity was touching
-    if (ret){
-      e.lastGround = l;
-      e.debugP = closestP;
-    }
-  }
-  return ret;
+			// var t = e.vy / e.vx - (l.y2 - l.y1) / (l.x2 - l.x1);
+			// if (Math.abs(t) > .5){
+			// 	console.log(t);
+			// }
+		}else if (!e.rolling){
+			//no roll, just stop the entity from falling
+			e.vy = 0;
+		}
+		//track the last terrain the entity was touching
+		if (ret){
+			e.lastGround = l;
+			e.debugP = closestP;
+		}
+	}
+	return ret;
 
 }
 
 function closestPointOnLine(l, x, y){
-  var dot = (((x-l.x1)*(l.x2-l.x1)) + ((y-l.y1)*(l.y2-l.y1))) / Math.pow(l.len, 2);
-  return {
-    x: (l.x1 + (dot * (l.x2 - l.x1))).clamp(l.x1, l.x2),
-    y: (l.y1 + (dot * (l.y2 - l.y1))).clamp(Math.min(l.y1, l.y2), Math.max(l.y1, l.y2))
-  };
+	var dot = (((x-l.x1)*(l.x2-l.x1)) + ((y-l.y1)*(l.y2-l.y1))) / Math.pow(l.len, 2);
+	return {
+		x: (l.x1 + (dot * (l.x2 - l.x1))).clamp(l.x1, l.x2),
+		y: (l.y1 + (dot * (l.y2 - l.y1))).clamp(Math.min(l.y1, l.y2), Math.max(l.y1, l.y2))
+	};
 }
 
 Number.prototype.clamp = function(min, max) {
-  return Math.min(Math.max(this, min), max);
+	return Math.min(Math.max(this, min), max);
 };
 
 function circleLineCollision(c, l){
-  // if (pointCircleCollision(c, l.x1, l.y1) ||
-  //     pointCircleCollision(c, l.x2, l.y2)){
-  //     return true;
-  // }
-  return closestPointOnLine(l, c.x, c.y);
+	// if (pointCircleCollision(c, l.x1, l.y1) ||
+	//     pointCircleCollision(c, l.x2, l.y2)){
+	//     return true;
+	// }
+	return closestPointOnLine(l, c.x, c.y);
 }
 
 function pointCircleCollision(c, x, y){
-  if (Math.pow(c.x - x, 2) + Math.pow(c.y - y, 2) <= c.r*c.r){
-    return true;
-  }
+	if (Math.pow(c.x - x, 2) + Math.pow(c.y - y, 2) <= c.r*c.r){
+		return true;
+	}
 }
