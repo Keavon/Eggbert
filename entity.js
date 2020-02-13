@@ -49,8 +49,8 @@ function newRect(x = 0, y = 0, w = 0, h = 0){
 }
 
 function update(entity, delta, onCollision = null){
-  entity.nextFrame -= !entity.rolling ? delta :
-    delta * Math.sqrt(entity.vx * entity.vx + entity.vy * entity.vy) / (entity.c.r * Math.PI * 2) / numFrames(entity.img);
+  entity.nextFrame -= !entity.rolling ? delta : (1 / ANIMATION_FPS) * delta *
+    Math.sqrt(entity.vx * entity.vx + entity.vy * entity.vy) / (entity.c.r * Math.PI * 2) * numFrames(entity.img);
   if (entity.img != null && entity.nextFrame <= 0){
     entity.frame++;
     entity.frame %= numFrames(entity.img);
