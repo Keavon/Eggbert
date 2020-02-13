@@ -103,6 +103,7 @@ function setupPlayer(){
 			break;
 			case "Space":
 			if (player.grounded){
+        player.idle = false;
 				player.grounded = false;
 				player.vy = -700;
 				if (!player.rolling){

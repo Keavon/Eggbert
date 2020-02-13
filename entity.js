@@ -14,6 +14,7 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
     frame: 0,
     nextAnim: true, //true = loop same anim
     nextFrame: 1.0/ANIMATION_FPS,
+    facingLeft: false,
     static: false,
     grounded: false,
     rolling: false,
@@ -117,6 +118,7 @@ function update(entity, delta, onCollision = null){
       }
     });}
     entity.grounded = checkEntityTerrain(entity, delta, prevPos);
+    entity.facingLeft = entity.vx < 0 || (entity.facingLeft && entity.vx == 0);
     // }
 
     return
@@ -127,7 +129,16 @@ function update(entity, delta, onCollision = null){
     if (entity.img == null){
       // context.fillRect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox.h);
     }else{
-      context.drawImage(getSpriteFrame(entity.img, entity.frame), entity.hitBox.x, entity.hitBox.y);
+      if(entity.facingLeft){
+        context.translate(entity.hitBox.x + entity.hitBox.w, 0);
+        context.scale(-1, 1);
+        context.drawImage(getSpriteFrame(entity.img, entity.frame), 0, entity.hitBox.y);
+        context.scale(-1, 1);
+        context.translate(-entity.hitBox.x-entity.hitBox.w, 0);
+      } else{
+        context.drawImage(getSpriteFrame(entity.img, entity.frame), entity.hitBox.x, entity.hitBox.y);
+      }
+
     }
     if (drawDebug){
       //draw hitbox
