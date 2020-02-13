@@ -22,13 +22,14 @@ const WALK_SPEED = 200;
 
 function updatePlayer(delta){
   //calculate player direction
-  if (player.rolling){
+  if (player.rolling || !player.grounded){
 		player.idle = false;
     var xChange;
+    var accel = player.rolling ? ROLL_ACCEL : ROLL_ACCEL * 10;
     if (rightLast){
-      xChange = delta * (right ? ROLL_ACCEL : left ? -ROLL_ACCEL : 0);
+      xChange = delta * (right ? accel : left ? -accel : 0);
     } else{
-      xChange = delta * (left ? -ROLL_ACCEL : right ? ROLL_ACCEL : 0);
+      xChange = delta * (left ? -accel : right ? accel : 0);
     }
     if (player.grounded){
       var theta = Math.atan2(player.vy, player.vx);
@@ -36,6 +37,9 @@ function updatePlayer(delta){
       player.vx += xChange;
     }else {
       player.vx += xChange;
+    }
+    if (!player.rolling){
+      player.vx = player.vx.clamp(-WALK_SPEED, WALK_SPEED);
     }
 	} else {
 		if (rightLast){
