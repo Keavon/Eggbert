@@ -151,13 +151,13 @@ function setupPlayer(){
 }
 
 function sound(src) {
-	this.sound = document.createElement("audio");
-	this.sound.src = "sounds/" + src;
-	this.sound.setAttribute("preload", "auto");
-	this.sound.setAttribute("controls", "none");
-	this.sound.style.display = "none";
+	this.sound = new Audio("sounds/" + src);
+	// this.sound.src = "sounds/" + src;
+	// this.sound.setAttribute("preload", "auto");
+	// this.sound.setAttribute("controls", "none");
+	// this.sound.style.display = "none";
 	this.sound.volume = .3;
-	document.body.appendChild(this.sound);
+	// document.body.appendChild(this.sound);
 	this.play = function(){
 		this.sound.play();
 	}
