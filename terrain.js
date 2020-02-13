@@ -95,13 +95,11 @@ function checkEntityTerrain(e, delta, prevPos){
   //find the closest terrain segment and point of contact
   terrain.forEach((line, i) => {
     //check if circle is between ends of line before checking distances
-    // if (e.c.x + e.c.r >= line.x1 && e.c.x - e.c.r <= line.x2){
     if (Math.max(e.c.x, prevPos.x) + e.c.r >= line.x1 && Math.min(e.c.x, prevPos.x) - e.c.r <= line.x2){
       //check if entity clipped through segment this frame
       var iP = lineIntersection(line, newSegment(prevPos.x, prevPos.y, e.c.x, e.c.y), false);
       if (iP != null && (!line.oneWay || (e.vy > 0 && !e.grounded))){
         //entity center clipped through line, move back
-        // console.log("clipped");
         var xD = e.c.x - prevPos.x;
         var yD = e.c.y - prevPos.y;
         var s = Math.sqrt(xD * xD + yD * yD);
@@ -109,8 +107,6 @@ function checkEntityTerrain(e, delta, prevPos){
         e.c.y = iP.y - yD / (s/2);
         e.hitBox.x = e.c.x - e.hitBox.w / 2;
         e.hitBox.y = e.c.y + e.c.r - e.hitBox.h;
-        // closestP = circleLineCollision(e.c, l);
-        // closestD = Math.pow(closestP.x - e.c.x, 2) + Math.pow(closestP.y - e.c.y, 2);
       }
       var cPoint = circleLineCollision(e.c, line);
       var d = Math.pow(cPoint.x - e.c.x, 2) + Math.pow(cPoint.y - e.c.y, 2);
@@ -132,9 +128,6 @@ function checkEntityTerrain(e, delta, prevPos){
 
   //check if the point is within the range check
   if (closestD != -1 && closestD < distCheck){
-    // if (iP != null){
-    //   console.log("adjusting after clip");
-    // }
     //adjust entity position
     var dirX = closestP.x - e.c.x;
     var dirY = closestP.y - e.c.y;
@@ -168,7 +161,6 @@ function checkEntityTerrain(e, delta, prevPos){
       //handle switching slopes and momentum transfer when entity lands on this
       //segment for the first time
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
-      // var thetaL = Math.atan(l.slope);
       var thetaL = Math.atan2(l.y1 - l.y2, l.x2 - l.x1);
       var thetaE = -Math.atan2(e.vy, e.vx);
       var speedTrans = (1.0 - Math.abs((thetaE - (thetaL)) / (Math.PI/2))) * 1.3;
@@ -178,17 +170,12 @@ function checkEntityTerrain(e, delta, prevPos){
     } else if ((e.rolling || forceSlide) && e.grounded){
       //transfer verticle to horizontal each frame
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
-      // var theta = Math.atan(l.slope);
       var theta = Math.atan2(l.y1 - l.y2, l.x2 - l.x1);
       var yChange = gravity * delta * Math.sin(Math.abs(theta));
       if (l.slope != 0){
         e.vy += yChange * Math.sin(Math.abs(theta));// * (l.slope > 0 ? -1 : 1);
         e.vx += yChange * Math.cos(theta) * (l.slope < 0 ? 1 : -1);
       }
-			// var t = e.vy / e.vx - (l.y2 - l.y1) / (l.x2 - l.x1);
-			// if (Math.abs(t) > .5){
-			// 	console.log(t);
-			// }
 		}else if (!e.rolling){
 			//no roll, just stop the entity from falling
 			e.vy = 0;
@@ -216,10 +203,6 @@ Number.prototype.clamp = function(min, max) {
 };
 
 function circleLineCollision(c, l){
-	// if (pointCircleCollision(c, l.x1, l.y1) ||
-	//     pointCircleCollision(c, l.x2, l.y2)){
-	//     return true;
-	// }
 	return closestPointOnLine(l, c.x, c.y);
 }
 

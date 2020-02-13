@@ -6,11 +6,15 @@ let rightLast = false; //which button was pressed last
 let shellIntegrity = 100;
 
 let sounds = {
-  roll: "rolling.wav",
   crack: "crack.wav",
-  jump: "jump.wav",
 	step1: "step1.mp3",
-	step2: "step2.mp3"
+	step2: "step2.mp3",
+  //need below this line
+  roll: "rolling.wav",
+  jump: "jump.wav",
+  music: "music.wav",
+  victory: "victory.wav",
+  chirp: "chirp.wav"
 }
 
 const ROLL_ACCEL = 100;
@@ -30,8 +34,6 @@ function updatePlayer(delta){
       var theta = Math.atan2(player.vy, player.vx);
       player.vy += Math.sin(theta) * xChange;
       player.vx += xChange;
-      // player.vx += Math.cos(theta) * xChange;
-      // console.log(theta);
     }else {
       player.vx += xChange;
     }
@@ -50,7 +52,6 @@ function updatePlayer(delta){
 				sounds.step2.play();
 			}
 
-			// player.img = "character/run/run";
 		} else if (player.grounded){
 			if (!player.idle){
 				player.idle = true;
@@ -59,8 +60,6 @@ function updatePlayer(delta){
 			}else if (player.idleLoop <= 0 && player.nextAnim == player.img){
 				player.nextAnim = "character/idle/idle" + (2 + Math.floor(Math.random() * 1));
 			}
-			// animate(player, "character/idle/idle1", )
-			// player.img = "character/idle/idle";
 		} else{
 			//falling
 			if (player.img != "character/fall/fall"){

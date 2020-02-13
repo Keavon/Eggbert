@@ -57,7 +57,7 @@ function setupLevel(){
 	setupPlayer();
 	//this is an invisible entity which yields control to the player at the start
 	//of the game
-	var e = newEntity(300, 200, 10, 10);
+	var e = newEntity(250, 200, 10, 10);
 	e.type = "controlTrigger";
 	entities.push(e);
 
@@ -68,22 +68,6 @@ function setupLevel(){
 	return fetch('assets/terrain.obj', {mode: 'no-cors'})
 	.then(response => response.text())
 	.then(data => loadTerrain(data));
-	// terrain.push(newSegment(10, 100, 400, 300));
-	// terrain.push(newSegment(400, 300, 410, 302));
-	// terrain.push(newSegment(410, 302, 420, 302));
-	// terrain.push(newSegment(420, 302, 430, 301));
-	// terrain.push(newSegment(430, 301, 440, 295));
-	// terrain.push(newSegment(440, 295, 450, 288));
-	// terrain.push(newSegment(500, 300, 800, 100, true));
-	// terrain.push(newSegment(0, 400, 1000, 400));
-	// terrain.push(newSegment(800, 100, 950, 400, true));
-	//
-	// var t1 = newSegment(800, 400, 1000, 300);
-	// var t2 = newSegment(1100, 300, 1300, 400);
-	// terrain.push(t1);
-	// curveBetween(t1, t2, false, 10);
-	// terrain.push(t2);
-	// terrain.push(newSegment(1200, 10, 1200, 500));
 	}
 
 function loadTerrain(data){
@@ -129,9 +113,9 @@ function resize() {
 		var height = canvas.clientHeight;
 		scaleFitNative = Math.min(width / tarWidth, height / tarHeight);
 		if(scaleFitNative < 1){
-			context.imageSmoothingEnabled = false; // turn it on for low res screens
+			context.imageSmoothingEnabled = true; // turn it on for low res screens
 		}else{
-			context.imageSmoothingEnabled = true; // turn it off for high res screens.
+			context.imageSmoothingEnabled = false; // turn it off for high res screens.
 		}
 		canvas.width = width;
 		canvas.height = height;
@@ -149,8 +133,6 @@ function render() {
 	var now = Date.now();
 	var delta = (now - lastTime) / 1000.0;
 	lastTime = now;
-
-
 
 	if (!pause && !gameOver){
 		updatePlayer(delta);
@@ -170,11 +152,8 @@ function render() {
 		canvasOffset.y
 	);
 
-	// context.clearRect(0, 0, canvas.width, canvas.height);
 	context.clearRect(-canvasOffset.x / scaleFitNative, -	canvasOffset.y / scaleFitNative, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
 
-	// const placeholder = getSpriteFrame("character/placeholder");
-	// context.drawImage(placeholder, 0, 0, 500, 500);
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);
 	});
@@ -184,9 +163,6 @@ function render() {
 		});
 	}
 
-	// if (pause){
-	// 	rollCredits(delta);
-	// }
 	context.font = "30px Comic Sans MS";
 	context.fillStyle = "red";
 	context.textAlign = "center";
@@ -194,7 +170,6 @@ function render() {
 
 	if (start != null && !gameOver){
 		context.fillText((lastTime - start) / 1000, 100 -canvasOffset.x / scaleFitNative, 100 -canvasOffset.y / scaleFitNative);
-		// console.log(lastTime - start);
 	}
 	requestAnimationFrame(render);
 }
@@ -203,5 +178,4 @@ function winGame(){
 	setTimeout(rollCredits, 4000);
 	gameOver = true;
 	screenText = "Victory! You broke out of the shell in: " + ((lastTime - start) / 1000) + "s!";
-	// context.fillText("Victory! You broke out of the shell in: " + ((lastTime - start) / 1000) + "s!");
 }

@@ -8,8 +8,8 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
     type: "rock",
     layer: 0,
     mask: [],
-		idle: true,
-		idleLoop: 5,
+    idle: true,
+    idleLoop: 5,
     img: null,
     frame: 0,
     nextAnim: true, //true = loop same anim
@@ -27,10 +27,10 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
 }
 
 function animate(entity, anim, nextAnim = null){
-	if (anim != entity.img){
-		entity.frame = 0;
-		entity.img = anim;
-	}
+  if (anim != entity.img){
+    entity.frame = 0;
+    entity.img = anim;
+  }
   entity.nextAnim = nextAnim ? nextAnim : anim;
 }
 
@@ -56,10 +56,10 @@ function update(entity, delta, onCollision = null){
     if (entity.frame == 0 && entity.nextAnim != null){
       entity.img = entity.nextAnim;
       entity.nextAnim = entity.img; //loop the new anim
-			if (entity.idle){
-				entity.idleLoop--;
-				entity.idle = entity.idleLoop >= -1;
-			}
+      if (entity.idle){
+        entity.idleLoop--;
+        entity.idle = entity.idleLoop >= -1;
+      }
     }
     entity.nextFrame = 1.0/ANIMATION_FPS;
   }
@@ -82,7 +82,6 @@ function update(entity, delta, onCollision = null){
   entity.c.y = entity.hitBox.y + entity.hitBox.h - entity.c.r;
   // console.log(entity.c.r);
 
-  // if (onCollision != null){
   if (entity.mask.length > 0){
     entities.forEach(e => {
       if (entity.mask.includes(e.layer) && entity !== e && collides(entity, e)){
@@ -91,15 +90,12 @@ function update(entity, delta, onCollision = null){
         }
         if (entity.type == "player" && e.type == "rock"){
           var s = entity.vx * entity.vx + entity.vy * entity.vy;
-          // shellIntegrity -= 2 * Math.log(s + 0.0) / Math.log(2.0);
-          console.log(Math.sqrt(s));
           shellIntegrity -= Math.sqrt(s)/100;
           entity.vx = 0;
           entity.vy = 0;
           e.layer = -1;
-					sounds.crack.play();
+          sounds.crack.play();
           message("Shell has lost " + (Math.sqrt(s) / 100).toFixed(2) + " integrity! " + shellIntegrity.toFixed(2) + " left to go.");
-          console.log(shellIntegrity);
           if (shellIntegrity <= 0){
             winGame();
           }
@@ -109,78 +105,75 @@ function update(entity, delta, onCollision = null){
           e.layer = -1;
           start = Date.now();
         }
-        // console.log("collision");
         if (e.static){
           entity.vy = 0;
           entity.grounded = true;
           entity.hitBox.y = e.hitBox.y - entity.hitBox.h;
         }
       }
-    });}
-    entity.grounded = checkEntityTerrain(entity, delta, prevPos);
-    entity.facingLeft = entity.vx < 0 || (entity.facingLeft && entity.vx == 0);
-    // }
-
-    return
+    });
   }
+  entity.grounded = checkEntityTerrain(entity, delta, prevPos);
+  entity.facingLeft = entity.vx < 0 || (entity.facingLeft && entity.vx == 0);
 
-  function drawEntity(entity, context){
-    context.fillStyle = 'green';
-    if (entity.img == null){
-      // context.fillRect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox.h);
-    }else{
-      if(entity.facingLeft){
-        context.translate(entity.hitBox.x + entity.hitBox.w, 0);
-        context.scale(-1, 1);
-        context.drawImage(getSpriteFrame(entity.img, entity.frame), 0, entity.hitBox.y);
-        context.scale(-1, 1);
-        context.translate(-entity.hitBox.x-entity.hitBox.w, 0);
-      } else{
-        context.drawImage(getSpriteFrame(entity.img, entity.frame), entity.hitBox.x, entity.hitBox.y);
-      }
+  return
+}
 
+function drawEntity(entity, context){
+  context.fillStyle = 'green';
+  if (entity.img == null){
+  }else{
+    if(entity.facingLeft){
+      context.translate(entity.hitBox.x + entity.hitBox.w, 0);
+      context.scale(-1, 1);
+      context.drawImage(getSpriteFrame(entity.img, entity.frame), 0, entity.hitBox.y);
+      context.scale(-1, 1);
+      context.translate(-entity.hitBox.x-entity.hitBox.w, 0);
+    } else{
+      context.drawImage(getSpriteFrame(entity.img, entity.frame), entity.hitBox.x, entity.hitBox.y);
     }
-    if (drawDebug){
-      //draw hitbox
+
+  }
+  if (drawDebug){
+    //draw hitbox
+    context.beginPath();
+    context.rect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox.h);
+    context.stroke();
+
+    //draw terrain circle
+    context.beginPath();
+    context.arc(entity.c.x, entity.c.y, entity.c.r, 0, 2 * Math.PI, false);
+    context.strokeStyle = '#003300';
+    context.stroke();
+
+    //draw debug line
+    if (entity.debugP != null){
       context.beginPath();
-      context.rect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox.h);
+      context.moveTo(entity.c.x, entity.c.y);
+      var t = closestPointOnLine(terrain[1], entity.c.x, entity.c.y);
+      context.lineTo(entity.debugP.x, entity.debugP.y);
       context.stroke();
-
-      //draw terrain circle
-      context.beginPath();
-      context.arc(entity.c.x, entity.c.y, entity.c.r, 0, 2 * Math.PI, false);
-      context.strokeStyle = '#003300';
-      context.stroke();
-
-      //draw debug line
-      if (entity.debugP != null){
-        context.beginPath();
-        context.moveTo(entity.c.x, entity.c.y);
-        var t = closestPointOnLine(terrain[1], entity.c.x, entity.c.y);
-        context.lineTo(entity.debugP.x, entity.debugP.y);
-        context.stroke();
-      }
-
     }
+
   }
+}
 
-  function collides(entity1, entity2){
-    // console.log("check");
-    return intersects(entity1.hitBox, entity2.hitBox);
-  }
+function collides(entity1, entity2){
+  return intersects(entity1.hitBox, entity2.hitBox);
+}
 
-  //check rectangle collision
-  function intersects(rect1, rect2){
-    return (rect1.x < rect2.x + rect2.w &&
-      rect1.x + rect1.w > rect2.x &&
-      rect1.y < rect2.y + rect2.h &&
-      rect1.y + rect1.h > rect2.y);
-    }
+//check rectangle collision
+function intersects(rect1, rect2){
+  return (rect1.x < rect2.x + rect2.w &&
+    rect1.x + rect1.w > rect2.x &&
+    rect1.y < rect2.y + rect2.h &&
+    rect1.y + rect1.h > rect2.y);
+}
 
-    //check point in rect
-    function contains(rect, x, y){
-      return rect.x <= x &&
-      rect.x + rect.w >= x &&
-      rect.y <= y &&
-      rect.y + rect.h >= y;
-    }
+//check point in rect
+function contains(rect, x, y){
+  return rect.x <= x &&
+  rect.x + rect.w >= x &&
+  rect.y <= y &&
+  rect.y + rect.h >= y;
+}
