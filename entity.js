@@ -1,5 +1,5 @@
 
-const ANIMATION_FPS = 30;
+const ANIMATION_FPS = 8;
 const gravity = 2000;
 
 function newEntity(x = 0, y = 0, w = 0, h = 0){
@@ -8,6 +8,8 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
     type: "rock",
     layer: 0,
     mask: [],
+		idle: true,
+		idleLoop: 5,
     img: null,
     frame: 0,
     nextAnim: true, //true = loop same anim
@@ -23,10 +25,12 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
   }
 }
 
-function animate(entity, anim, nextAnim = true){
-  entity.frame = 0;
-  entity.img = anim;
-  entity.nextAnim = nextAnim;
+function animate(entity, anim, nextAnim = null){
+	if (anim != entity.img){
+		entity.frame = 0;
+		entity.img = anim;
+	}
+  entity.nextAnim = nextAnim ? nextAnim : anim;
 }
 
 function setVel(entity, vx, vy){
@@ -48,11 +52,15 @@ function update(entity, delta, onCollision = null){
   if (entity.img != null && entity.nextFrame <= 0){
     entity.frame++;
     entity.frame %= numFrames(entity.img);
-    if (entity.frame == 0 && entity.nextAnim !== true){
-      entity.img = nextAnim;
-      entity.nextAnim = true; //loop the new anim
+    if (entity.frame == 0 && entity.nextAnim != null){
+      entity.img = entity.nextAnim;
+      entity.nextAnim = entity.img; //loop the new anim
+			if (entity.idle){
+				entity.idleLoop--;
+				entity.idle = entity.idleLoop >= -1;
+			}
     }
-    entity.nextFrame += 1/ANIMATION_FPS;
+    entity.nextFrame = 1.0/ANIMATION_FPS;
   }
 
   if (entity.static){
@@ -88,6 +96,7 @@ function update(entity, delta, onCollision = null){
           entity.vx = 0;
           entity.vy = 0;
           e.layer = -1;
+					sounds.crack.play();
           console.log(shellIntegrity);
           if (shellIntegrity <= 0){
             // winGame();

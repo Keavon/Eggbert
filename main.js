@@ -10,12 +10,26 @@ let lastTime;
 
 let drawDebug = true;
 
+let screenText = "";
 
 
 function preloadSprites() {
 	return Promise.all([
-		loadSprite("character/placeholder"),
+		// loadSprite("character/run/left", 6),
+		// loadSprite("character/run/right", 6),
+		loadSprite("character/run/run", 6),
+		loadSprite("character/idle/idle1", 4),
+		loadSprite("character/idle/idle2", 4),
+		loadSprite("character/roll/roll", 2),
+		loadSprite("character/jump/jump", 4),
+		loadSprite("character/fall/fall", 2),
+
 	]);
+}
+
+function message(t){
+	screenText = t;
+	setTimeout(() => {screenText = "";}, 5000);
 }
 
 // Prepare for then execute render loop
@@ -32,6 +46,7 @@ function setup() {
 	preloadSprites().then(() => {
 		setupLevel().then(() => {
 			lastTime = Date.now();
+			message("Find a way to break out of your shell! Press SHIFT to roll.");
 			render();
 		});
 	});
@@ -52,7 +67,6 @@ function setupLevel(){
 	return fetch('assets/terrain.obj', {mode: 'no-cors'})
 	.then(response => response.text())
 	.then(data => loadTerrain(data));
-	// loadTerrain('assets/terrain.obj');
 	// terrain.push(newSegment(10, 100, 400, 300));
 	// terrain.push(newSegment(400, 300, 410, 302));
 	// terrain.push(newSegment(410, 302, 420, 302));
@@ -69,8 +83,7 @@ function setupLevel(){
 	// curveBetween(t1, t2, false, 10);
 	// terrain.push(t2);
 	// terrain.push(newSegment(1200, 10, 1200, 500));
-
-}
+	}
 
 function loadTerrain(data){
 	const TERRAIN_SCALE = 100;
@@ -157,21 +170,26 @@ function render() {
 	);
 
 	// context.clearRect(0, 0, canvas.width, canvas.height);
-	context.clearRect(-canvasOffset.x / scaleFitNative, -	canvasOffset.y / scaleFitNative, canvas.width, canvas.height);
+	context.clearRect(-canvasOffset.x / scaleFitNative, -	canvasOffset.y / scaleFitNative, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
 
 	// const placeholder = getSpriteFrame("character/placeholder");
 	// context.drawImage(placeholder, 0, 0, 500, 500);
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);
 	});
-	terrain.forEach((t, i) => {
-		drawTerrain(context, t);
-	});
+	if (drawDebug){
+		terrain.forEach((t, i) => {
+			drawTerrain(context, t);
+		});
+	}
 
 	if (pause){
 		rollCredits(delta);
 	}
-
+	context.font = "30px Comic Sans MS";
+	context.fillStyle = "red";
+	context.textAlign = "center";
+	context.fillText(screenText, 600 - canvasOffset.x / scaleFitNative, 200 - canvasOffset.y / scaleFitNative);
 
 	requestAnimationFrame(render);
 }
