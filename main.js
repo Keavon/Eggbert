@@ -142,17 +142,17 @@ function render() {
 	}
 
 	var canvasOffset = {
-		x: -player.c.x * scaleFitNative + canvas.width/2,
-		y: -player.c.y * scaleFitNative + canvas.height/2
+		x: (-player.c.x * scaleFitNative + canvas.width/2) / scaleFitNative,
+		y: (-player.c.y * scaleFitNative + canvas.height/2) / scaleFitNative
 	}
 	context.setTransform(
 		scaleFitNative,0,
 		0,scaleFitNative,
-		canvasOffset.x,
-		canvasOffset.y
+		canvasOffset.x * scaleFitNative,
+		canvasOffset.y * scaleFitNative
 	);
 
-	context.clearRect(-canvasOffset.x / scaleFitNative, -	canvasOffset.y / scaleFitNative, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
+	context.clearRect(-canvasOffset.x, -	canvasOffset.y, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
 
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);
@@ -164,12 +164,12 @@ function render() {
 	}
 
 	context.font = "30px Comic Sans MS";
-	context.fillStyle = "red";
+	context.fillStyle = "black";
 	context.textAlign = "center";
-	context.fillText(screenText, 600 - canvasOffset.x / scaleFitNative, 200 - canvasOffset.y / scaleFitNative);
+	context.fillText(screenText, 600 - canvasOffset.x, 200 - canvasOffset.y);
 
 	if (start != null && !gameOver){
-		context.fillText((lastTime - start) / 1000, 100 -canvasOffset.x / scaleFitNative, 100 -canvasOffset.y / scaleFitNative);
+		context.fillText((lastTime - start) / 1000, 100 -canvasOffset.x, 100 -canvasOffset.y);
 	}
 	requestAnimationFrame(render);
 }
