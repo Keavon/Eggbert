@@ -46,7 +46,7 @@ function setup() {
 	preloadSprites().then(() => {
 		setupLevel().then(() => {
 			lastTime = Date.now();
-			message("Find a way to break out of your shell!");
+			message("Find a way to break out of your shell! Press SHIFT to roll.");
 			render();
 		});
 	});

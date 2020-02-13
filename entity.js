@@ -60,7 +60,7 @@ function update(entity, delta, onCollision = null){
 				entity.idle = entity.idleLoop >= -1;
 			}
     }
-    entity.nextFrame += 1/ANIMATION_FPS;
+    entity.nextFrame = 1.0/ANIMATION_FPS;
   }
 
   if (entity.static){
