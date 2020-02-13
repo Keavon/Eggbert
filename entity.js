@@ -97,14 +97,16 @@ function update(entity, delta, onCollision = null){
           entity.vy = 0;
           e.layer = -1;
 					sounds.crack.play();
+          message("Shell has lost " + (Math.sqrt(s) / 100).toFixed(2) + " integrity! " + shellIntegrity.toFixed(2) + " left to go.");
           console.log(shellIntegrity);
           if (shellIntegrity <= 0){
-            // winGame();
+            winGame();
           }
         } else if (entity.type == "player" && e.type == "controlTrigger"){
           control = true;
           player.rolling = false;
           e.layer = -1;
+          start = Date.now();
         }
         // console.log("collision");
         if (e.static){

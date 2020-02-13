@@ -11,7 +11,8 @@ let lastTime;
 let drawDebug = true;
 
 let screenText = "";
-
+let start;
+let gameOver = false;
 
 function preloadSprites() {
 	return Promise.all([
@@ -151,7 +152,7 @@ function render() {
 
 
 
-	if (!pause){
+	if (!pause && !gameOver){
 		updatePlayer(delta);
 		entities.forEach((entity, i) => {
 			update(entity, delta);
@@ -183,13 +184,24 @@ function render() {
 		});
 	}
 
-	if (pause){
-		rollCredits(delta);
-	}
+	// if (pause){
+	// 	rollCredits(delta);
+	// }
 	context.font = "30px Comic Sans MS";
 	context.fillStyle = "red";
 	context.textAlign = "center";
 	context.fillText(screenText, 600 - canvasOffset.x / scaleFitNative, 200 - canvasOffset.y / scaleFitNative);
 
+	if (start != null && !gameOver){
+		context.fillText((lastTime - start) / 1000, 100 -canvasOffset.x / scaleFitNative, 100 -canvasOffset.y / scaleFitNative);
+		// console.log(lastTime - start);
+	}
 	requestAnimationFrame(render);
+}
+
+function winGame(){
+	setTimeout(rollCredits, 4000);
+	gameOver = true;
+	screenText = "Victory! You broke out of the shell in: " + ((lastTime - start) / 1000) + "s!";
+	// context.fillText("Victory! You broke out of the shell in: " + ((lastTime - start) / 1000) + "s!");
 }
