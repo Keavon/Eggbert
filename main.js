@@ -12,6 +12,7 @@ let drawDebug = true;
 
 let screenText = "";
 let start;
+let pause = false;
 let gameOver = false;
 
 function preloadSprites() {

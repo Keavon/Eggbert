@@ -12,3 +12,9 @@ function startGame(){
   document.querySelector("canvas").classList.remove("hidden");
   setup();
 }
+
+function rollCredits(){
+  // window.location.href = './credits.html';
+  document.querySelector("canvas").classList.add("hidden");
+  document.querySelector(".credits").classList.remove("hidden");
+}
