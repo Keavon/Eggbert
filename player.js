@@ -17,8 +17,8 @@ let sounds = {
   chirp: "chirp.wav"
 }
 
-const ROLL_ACCEL = 100;
-const WALK_SPEED = 200;
+const ROLL_ACCEL = 200;
+const WALK_SPEED = 300;
 
 function updatePlayer(delta){
   //calculate player direction
@@ -86,6 +86,7 @@ function setupPlayer(){
 		sounds[key] = new sound(sounds[key]);
 	})
   sounds.music.play();
+  sounds.music.sound.loop = true;
 	entities.push(player); // add to update/collision list
 	player.rolling = true;
 	animate(player, "character/roll/roll");
@@ -130,8 +131,6 @@ function setupPlayer(){
 			case "KeyX":
 			drawDebug = !drawDebug;
 			break;
-			case "KeyC":
-			rollCredits(0);
 		}
 	});
 	document.addEventListener("keyup", event => {
