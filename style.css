@@ -13,7 +13,7 @@ canvas {
 	display: none;
 }
 
-.menu .credits{
+.menu, .credits{
 	width: 30%;
 	height: 50%;
 	text-align: center;
