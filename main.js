@@ -8,7 +8,7 @@ let entities = [];
 let player;
 let lastTime;
 
-let drawDebug = true;
+let drawDebug = false;
 
 let screenText = "";
 let start;
