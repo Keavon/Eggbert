@@ -15,5 +15,5 @@ function rollCredits(){
   // context.fillStyle = "red";
   // context.textAlign = "center";
   // context.fillText(CREDITS, 0, 0);
-  window.location.href = '../credits.html';
+  window.location.href = './credits.html';
 }
