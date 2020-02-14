@@ -34,7 +34,7 @@ function preloadSprites() {
 
 function message(t){
 	screenText = t;
-	setTimeout(() => {screenText = "";}, 5000);
+	setTimeout(() => {screenText = "";clearTimeout();}, 5000);
 }
 
 // Prepare for then execute render loop
@@ -61,22 +61,24 @@ function setupLevel(){
 	setupPlayer();
 	//this is an invisible entity which yields control to the player at the start
 	//of the game
-	var e = newEntity(250, 200, 10, 10);
+	var e = newEntity(550, 150, 10, 10);
 	e.type = "controlTrigger";
 	e.img = null;
 	entities.push(e);
 
 	//add rocks here!
-	entities.push(newEntity(1150, 10, 40, 30));
+	for(var i = 0; i < 12; i++){
+		entities.push(newEntity(1100 + i * 1000, 0, 30, 15));
+	}
 
 	//generate terrain from mesh
-	return fetch('assets/terrain.obj', {mode: 'no-cors'})
+	return fetch('assets/asdf.obj', {mode: 'no-cors'})
 	.then(response => response.text())
 	.then(data => loadTerrain(data));
 	}
 
-	const TERRAIN_OFFSET = {x: 3250, y: 400};
-	const TERRAIN_SCALE = 100;
+	const TERRAIN_OFFSET = {x: 2050, y: 250};
+	const TERRAIN_SCALE = 63;
 function loadTerrain(data){
 	var vertices;
 	var vertexMatches = data.match(/^v( -?\d+(\.\d+)?){3}$/gm);
@@ -104,7 +106,7 @@ function loadTerrain(data){
 				v[i] = parseInt(a) - 1;
 			});
 			terrain.push(newSegment(vertices[v[0]][0] + TERRAIN_OFFSET.x, -vertices[v[0]][1] + TERRAIN_OFFSET.y,
-				vertices[v[1]][0] + TERRAIN_OFFSET.x, -vertices[v[1]][1] + TERRAIN_OFFSET.y, true));
+				vertices[v[1]][0] + TERRAIN_OFFSET.x, -vertices[v[1]][1] + TERRAIN_OFFSET.y, false));
 		});
 	}
 }
@@ -159,7 +161,7 @@ function render() {
 
 	context.clearRect(-canvasOffset.x, -	canvasOffset.y, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
 
-	context.drawImage(getSpriteFrame("level", 0), -150, -600);
+	context.drawImage(getSpriteFrame("level", 0), -460, -1575);
 
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);

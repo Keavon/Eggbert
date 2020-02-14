@@ -12,7 +12,7 @@ let sounds = {
   //need below this line
   roll: "rolling.wav",
   jump: "jump.wav",
-  music: "music.wav",
+  music: "music.mp3",
   victory: "victory.wav",
   chirp: "chirp.wav"
 }
@@ -78,13 +78,14 @@ function updatePlayer(delta){
 }
 
 function setupPlayer(){
-	player = newEntity(100, 50, 60, 60);
+	player = newEntity(400, 30, 60, 60);
 	// player = newEntity(1150, -2500, 40, 80);
 	player.type = "player";
 	player.mask = [0];
 	Object.keys(sounds).forEach((key) => {
 		sounds[key] = new sound(sounds[key]);
 	})
+  sounds.music.play();
 	entities.push(player); // add to update/collision list
 	player.rolling = true;
 	animate(player, "character/roll/roll");
@@ -108,7 +109,7 @@ function setupPlayer(){
 			if (player.grounded){
         player.idle = false;
 				player.grounded = false;
-				player.vy = -700;
+				player.vy = -800;
 				if (!player.rolling){
 					animate(player, "character/jump/jump", "character/fall/fall");
 				}
