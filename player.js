@@ -78,7 +78,7 @@ function updatePlayer(delta){
 }
 
 function setupPlayer(){
-	player = newEntity(100, 50, 40, 80);
+	player = newEntity(100, 50, 60, 60);
 	// player = newEntity(1150, -2500, 40, 80);
 	player.type = "player";
 	player.mask = [0];

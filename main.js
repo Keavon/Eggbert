@@ -25,6 +25,9 @@ function preloadSprites() {
 		loadSprite("character/roll/roll", 2),
 		loadSprite("character/jump/jump", 4),
 		loadSprite("character/fall/fall", 2),
+		loadSprite("rock/solid"),
+		loadSprite("rock/broken"),
+		loadSprite("level"),
 
 	]);
 }
@@ -60,10 +63,11 @@ function setupLevel(){
 	//of the game
 	var e = newEntity(250, 200, 10, 10);
 	e.type = "controlTrigger";
+	e.img = null;
 	entities.push(e);
 
 	//add rocks here!
-	entities.push(newEntity(1150, 10, 20, 20));
+	entities.push(newEntity(1150, 10, 40, 30));
 
 	//generate terrain from mesh
 	return fetch('assets/terrain.obj', {mode: 'no-cors'})
@@ -71,9 +75,9 @@ function setupLevel(){
 	.then(data => loadTerrain(data));
 	}
 
-function loadTerrain(data){
+	const TERRAIN_OFFSET = {x: 3250, y: 400};
 	const TERRAIN_SCALE = 100;
-	const TERRAIN_OFFSET = {x: 3000, y: 400};
+function loadTerrain(data){
 	var vertices;
 	var vertexMatches = data.match(/^v( -?\d+(\.\d+)?){3}$/gm);
 	if (vertexMatches)
@@ -108,8 +112,8 @@ function loadTerrain(data){
 // Match canvas resolution to document dimensions
 function resize() {
 	if (canvas) {
-		var tarWidth = 1920/2;
-		var tarHeight = 1080/2;
+		var tarWidth = 1920 / 2;
+		var tarHeight = 1080 / 2;
 		var width = canvas.clientWidth;
 		var height = canvas.clientHeight;
 		scaleFitNative = Math.min(width / tarWidth, height / tarHeight);
@@ -154,6 +158,8 @@ function render() {
 	);
 
 	context.clearRect(-canvasOffset.x, -	canvasOffset.y, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
+
+	context.drawImage(getSpriteFrame("level", 0), -150, -600);
 
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);
