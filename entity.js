@@ -97,7 +97,7 @@ function update(entity, delta, onCollision = null){
           entity.vy = 0;
           e.layer = -1;
           sounds.crack.play();
-          e.img = "rock/broken";
+          animate(e, "rock/broken");
           message("Shell has lost " + (Math.sqrt(s) / 100).toFixed(2) + " integrity! " + shellIntegrity.toFixed(2) + " left to go.");
           if (shellIntegrity <= 0){
             winGame();
