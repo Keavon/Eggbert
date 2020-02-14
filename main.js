@@ -77,8 +77,8 @@ function setupLevel(){
 	.then(data => loadTerrain(data));
 	}
 
-	const TERRAIN_OFFSET = {x: 2050, y: 250};
-	const TERRAIN_SCALE = 63;
+	const TERRAIN_OFFSET = {x: 2020, y: 250};
+	const TERRAIN_SCALE = 62;
 function loadTerrain(data){
 	var vertices;
 	var vertexMatches = data.match(/^v( -?\d+(\.\d+)?){3}$/gm);
