@@ -11,6 +11,7 @@ let lastTime;
 let drawDebug = false;
 
 let screenText = "";
+let screenTimeout;
 let start;
 let pause = false;
 let gameOver = false;
@@ -33,8 +34,10 @@ function preloadSprites() {
 }
 
 function message(t){
+	clearTimeout
 	screenText = t;
-	setTimeout(() => {screenText = "";clearTimeout();}, 5000);
+	clearTimeout(screenTimeout);
+	screenTimeout = setTimeout(() => {screenText = "";clearTimeout();}, 5000);
 }
 
 // Prepare for then execute render loop
@@ -184,6 +187,8 @@ function render() {
 }
 
 function winGame(){
+	clearTimeout();
+	clearTimeout(screenTimeout);
 	setTimeout(rollCredits, 4000);
 	gameOver = true;
 	screenText = "Victory! You broke out of the shell in: " + ((lastTime - start) / 1000) + "s!";
