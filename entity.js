@@ -145,7 +145,7 @@ function drawEntity(entity, context){
     //draw terrain circle
     context.beginPath();
     context.arc(entity.c.x, entity.c.y, entity.c.r, 0, 2 * Math.PI, false);
-    context.strokeStyle = '#003300';
+    context.strokeStyle = entity.grounded ? 'red' : 'black';
     context.stroke();
 
     //draw debug line

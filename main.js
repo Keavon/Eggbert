@@ -109,9 +109,11 @@ function loadTerrain(data){
 				v[i] = parseInt(a) - 1;
 			});
 			terrain.push(newSegment(vertices[v[0]][0] + TERRAIN_OFFSET.x, -vertices[v[0]][1] + TERRAIN_OFFSET.y,
-				vertices[v[1]][0] + TERRAIN_OFFSET.x, -vertices[v[1]][1] + TERRAIN_OFFSET.y, false));
+				vertices[v[1]][0] + TERRAIN_OFFSET.x, -vertices[v[1]][1] + TERRAIN_OFFSET.y, true));
 		});
 	}
+	// terrain.push(newSegment(200, 50, 200, 1000, true));
+	// terrain.push(newSegment(200, 50, 210, 50, true));
 }
 
 // Match canvas resolution to document dimensions
