@@ -112,6 +112,7 @@ function loadTerrain(data){
 				vertices[v[1]][0] + TERRAIN_OFFSET.x, -vertices[v[1]][1] + TERRAIN_OFFSET.y, true));
 		});
 	}
+	// terrain.push(newSegment(200, 0, 200, 1000, true));
 	// terrain.push(newSegment(200, 50, 200, 1000, true));
 	// terrain.push(newSegment(200, 50, 210, 50, true));
 }

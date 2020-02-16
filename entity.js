@@ -18,6 +18,7 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
     static: false,
     grounded: false,
     rolling: false,
+    forceSlide: false,
     lastGround: null,
     vx: 0.0,
     vy: 0.0,
@@ -49,7 +50,7 @@ function newRect(x = 0, y = 0, w = 0, h = 0){
 }
 
 function update(entity, delta, onCollision = null){
-  entity.nextFrame -= !entity.rolling ? delta : (1 / ANIMATION_FPS) * delta *
+  entity.nextFrame -= !(entity.rolling || entity.forceSlide) ? delta : (1 / ANIMATION_FPS) * delta *
     Math.sqrt(entity.vx * entity.vx + entity.vy * entity.vy) / (entity.c.r * Math.PI * 2) * numFrames(entity.img);
   if (entity.img != null && entity.nextFrame <= 0){
     entity.frame++;
@@ -69,7 +70,7 @@ function update(entity, delta, onCollision = null){
     return;
   }
 
-  if(!entity.grounded){
+  if(!entity.grounded && !entity.forceSlide){
     entity.vy += gravity * delta;
   }
 

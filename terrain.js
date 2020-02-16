@@ -104,7 +104,7 @@ function checkEntityTerrain(e, delta, prevPos){
   var l;
   var checkLast = false;
   //buffer the distance check if the entity is grounded, check a little extra
-  var distCheck = e.grounded ? (e.c.r * e.c.r + WALK_SPEED/1.5) : (e.c.r * e.c.r);
+  var distCheck = e.grounded || e.forceSlide ? (e.c.r * e.c.r + WALK_SPEED/1.5) : (e.c.r * e.c.r);
   //find the closest terrain segment and point of contact
   terrain.forEach((line, i) => {
     //check if circle is between ends of line before checking distances
@@ -137,7 +137,7 @@ function checkEntityTerrain(e, delta, prevPos){
     return ret;
   }
 
-  if (checkLast && l != e.lastGround && e.grounded){
+  if (checkLast && l != e.lastGround && (e.grounded || e.forceSlide)){
     ret = true;
   }
 
@@ -174,20 +174,25 @@ function checkEntityTerrain(e, delta, prevPos){
     }
 
     if (l.x1 - l.x2 == 0){ //vert line case
+      e.forceSlide = false;
+      forceSlide = false;
       e.vx = 0;
     }
+
     //update rolling velocity
-    else if ((e.rolling || forceSlide) && (e.lastGround != l || !e.grounded)){
+    else if ((e.rolling && (e.lastGround != l || !e.grounded)) || (forceSlide && !e.forceSlide)){
+      e.forceSlide = forceSlide;// && ret;
+    // else if ((e.rolling || e.forceSlide) && (e.lastGround != l || (!e.grounded && !e.forceSlide))){
       //handle switching slopes and momentum transfer when entity lands on this
       //segment for the first time
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
       var thetaL = Math.atan2(l.y1 - l.y2, l.x2 - l.x1);
-      var thetaE = -Math.atan2(e.vy, e.vx);
+      var thetaE = -Math.atan2(e.vy, e.vx);// : -Math.atan2(e.lastGround.y1 - e.lastGround.y2, e.lastGround.x2 - e.lastGround.x1);
       var speedTrans = (1.0 - Math.abs((thetaE - (thetaL)) / (Math.PI/2))) * 1.3;
       speedTrans = speedTrans.clamp(-1.0 , 1.0);
       e.vy = (speed * speedTrans) * Math.sin(Math.abs(thetaL)) * (l.slope > 0 ? -1 : 1);
       e.vx = (speed * speedTrans) * Math.cos(thetaL);
-    } else if ((e.rolling || forceSlide) && e.grounded){
+    } else if ((e.rolling && e.grounded) || (e.forceSlide && forceSlide)){
       //transfer verticle to horizontal each frame
       var speed = Math.sqrt(e.vx * e.vx + e.vy * e.vy);
       var theta = Math.atan2(l.y1 - l.y2, l.x2 - l.x1);
@@ -198,17 +203,18 @@ function checkEntityTerrain(e, delta, prevPos){
       }
     }else if (!e.rolling && ret){
       //no roll, just stop the entity from falling
+      e.forceSlide = false;
       e.vy = 0;
     }
     //track the last terrain the entity was touching
-    if (ret && !(checkLast || forceSlide)){
+    if (ret && (!checkLast || e.forceSlide || e.rolling)){
       e.lastGround = l;
     }
     if (ret){
       e.debugP = closestP;
     }
   }
-  return ret && (!forceSlide || checkLast);
+  return ret && (!e.forceSlide || (checkLast && e.grounded));
 
 }
 
