@@ -85,7 +85,7 @@ function updatePlayer(delta){
 }
 
 function setupPlayer(){
-  player = newEntity(400, 30, 60, 60);
+  player = newEntity(822, 1685, 60, 60);
   // player = newEntity(1150, -2500, 40, 80);
   player.type = "player";
   player.mask = [0];
@@ -117,12 +117,17 @@ function setupPlayer(){
       if (player.grounded){
         player.idle = false;
         player.grounded = false;
-        player.vy = -800;
-        if (!player.rolling){
-          animate(player, "character/jump/jump", "character/fall/fall");
-        }
-      }
-      break;
+				if (player.vy < 0){
+					player.vy += -500;
+				}
+				else{
+					player.vy = -800;
+				}
+				if (!player.rolling){
+					animate(player, "character/jump/jump", "character/fall/fall");
+				}
+			}
+			break;
 			case "KeyS":
 			if (player.grounded && player.lastGround.oneWay && !player.phasing.includes(player.lastGround)){
 				player.phasing.push(player.lastGround);

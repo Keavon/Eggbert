@@ -93,13 +93,13 @@ function update(entity, delta, onCollision = null){
         }
         if (entity.type == "player" && e.type == "rock"){
           var s = entity.vx * entity.vx + entity.vy * entity.vy;
-          shellIntegrity -= Math.sqrt(s)/20;
+          shellIntegrity -= Math.sqrt(s)/50;
           entity.vx = 0;
           entity.vy = 0;
           e.layer = -1;
           sounds.crack.play();
           animate(e, "rock/broken");
-          message("Shell has lost " + (Math.sqrt(s) / 20).toFixed(2) + " integrity! " + shellIntegrity.toFixed(2) + " left to go.");
+          message("Shell has lost " + (Math.sqrt(s) / 50).toFixed(2) + " integrity! " + shellIntegrity.toFixed(2) + " left to go.");
           if (shellIntegrity <= 0){
             winGame();
           }

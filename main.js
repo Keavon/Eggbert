@@ -64,25 +64,38 @@ function setupLevel(){
 	setupPlayer();
 	//this is an invisible entity which yields control to the player at the start
 	//of the game
-	var e = newEntity(550, 150, 10, 10);
+	var e = newEntity(player.hitBox.x + 230, player.hitBox.y, 10, 10);
 	e.type = "controlTrigger";
 	e.img = null;
 	entities.push(e);
 
 	//add rocks here!
-	for(var i = 0; i < 12; i++){
-		entities.push(newEntity(1100 + i * 1000, 0, 30, 15));
-	}
+	// for(var i = 0; i < 12; i++){
+		// entities.push(newEntity(1100 + i * 1000, 0, 30, 15));
+	// }
+	entities.push(newEntity(3192, 1780, 30, 15));
+	entities.push(newEntity(8745, 2350, 30, 15));
+	entities.push(newEntity(756, 1580, 30, 15));
+	entities.push(newEntity(8456, 2275, 30, 15));
+	entities.push(newEntity(13408, 1170, 30, 15));
+	entities.push(newEntity(4755, 1460, 30, 15));
+	entities.push(newEntity(8423, 1866, 30, 15));
+
 
 	//generate terrain from mesh
-	return fetch('assets/asdf.obj', {mode: 'no-cors'})
+	return fetch('assets/ground2.obj', {mode: 'no-cors'})
 	.then(response => response.text())
-	.then(data => loadTerrain(data));
+	.then(data => loadTerrain(data, false))
+	.then(() => {
+		fetch('assets/floating.obj', {mode: 'no-cors'})
+		.then(response => response.text())
+		.then(data => loadTerrain(data));
+	});
 	}
 
-	const TERRAIN_OFFSET = {x: 2020, y: 250};
+	const TERRAIN_OFFSET = {x: 2482, y: 1822};
 	const TERRAIN_SCALE = 62;
-function loadTerrain(data){
+function loadTerrain(data, oneWay = true){
 	var vertices;
 	var vertexMatches = data.match(/^v( -?\d+(\.\d+)?){3}$/gm);
 	if (vertexMatches)
@@ -109,20 +122,20 @@ function loadTerrain(data){
 				v[i] = parseInt(a) - 1;
 			});
 			terrain.push(newSegment(vertices[v[0]][0] + TERRAIN_OFFSET.x, -vertices[v[0]][1] + TERRAIN_OFFSET.y,
-				vertices[v[1]][0] + TERRAIN_OFFSET.x, -vertices[v[1]][1] + TERRAIN_OFFSET.y, true));
+				vertices[v[1]][0] + TERRAIN_OFFSET.x, -vertices[v[1]][1] + TERRAIN_OFFSET.y, oneWay));
 		});
 	}
 	// terrain.push(newSegment(200, 0, 200, 1000, true));
 	// terrain.push(newSegment(200, 50, 200, 1000, true));
 	// terrain.push(newSegment(200, 50, 210, 50, true));
-	terrain.push(newSegment(-100, 300, 3000, 300, true));
+	// terrain.push(newSegment(-100, 1900, 3000, 1900, false));
 }
 
 // Match canvas resolution to document dimensions
 function resize() {
 	if (canvas) {
-		var tarWidth = 1920 / 2;
-		var tarHeight = 1080 / 2;
+		var tarWidth = 1920 / 1.5;
+		var tarHeight = 1080 / 1.5;
 		var width = canvas.clientWidth;
 		var height = canvas.clientHeight;
 		scaleFitNative = Math.min(width / tarWidth, height / tarHeight);
@@ -168,7 +181,7 @@ function render() {
 
 	context.clearRect(-canvasOffset.x, -	canvasOffset.y, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
 
-	context.drawImage(getSpriteFrame("level", 0), -460, -1575);
+	context.drawImage(getSpriteFrame("level", 0), 0, 0);
 
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);

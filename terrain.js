@@ -91,6 +91,7 @@ function lineIntersection(l1, l2, inf = true){
 }
 
 function drawTerrain(context, t){
+	context.strokeStyle = 'black';
   context.beginPath();
   context.moveTo(t.x1, t.y1);
   context.lineTo(t.x2, t.y2);
@@ -171,7 +172,7 @@ function checkEntityTerrain(e, delta, prevPos){
 		e.hitBox.x = e.c.x - e.hitBox.w/2;
 		e.hitBox.y = e.c.y + e.c.r - e.hitBox.h;
 
-		var forceSlide = (Math.abs(l.slope) > 2.01);//max slope climb
+		var forceSlide = (Math.abs(l.slope) > 3.01);//max slope climb
 		//check collision is down and whether center of entity is over the segment
 		ret = ret || (dirY > 0 && e.c.x + e.c.r / 4 >= l.x1 && e.c.x - e.c.r / 4 <= l.x2);// &&
 		if (dirY < 0 && (l.x1 - l.x2 != 0) && !l.oneWay){
@@ -197,7 +198,6 @@ function checkEntityTerrain(e, delta, prevPos){
 
 		//update rolling velocity
 		else if ((e.rolling && !forceSlide && (e.lastGround != l || !e.grounded)) || (forceSlide && !e.forceSlide)){
-			console.log(e.forceSlide);
 			e.forceSlide = forceSlide;// && ret;
 			// else if ((e.rolling || e.forceSlide) && (e.lastGround != l || (!e.grounded && !e.forceSlide))){
 			//handle switching slopes and momentum transfer when entity lands on this
@@ -224,7 +224,7 @@ function checkEntityTerrain(e, delta, prevPos){
 			e.vy = 0;
 		} else{
 			e.forceSlide = forceSlide;
-			console.log("hm");
+			// console.log("hm");
 		}
 		//track the last terrain the entity was touching
 		if (ret && (!checkLast || e.forceSlide || e.rolling)){
