@@ -123,56 +123,61 @@ function setupPlayer(){
         }
       }
       break;
-      case "ShiftLeft":
-      if (!player.rolling && player.grounded){
-        //initial roll convert
-        var theta = -Math.atan(player.lastGround.slope);
-        player.vy = Math.sin(theta) * player.vx;
-        player.vx = Math.cos(theta) * player.vx;
-      }
-      if (!player.rolling){
-        animate(player, "character/roll/roll");
-      }
-      player.rolling = true;
-      break;
-      case "KeyX":
-      drawDebug = !drawDebug;
-      break;
-    }
-  });
-  document.addEventListener("keyup", event => {
-    if (!control){
-      return;
-    }
-    switch(event.code){
-      case "KeyA":
-      case "ArrowLeft":
-      left = false;
-      break;
-      case "KeyD":
-      case "ArrowRight":
-      right = false;
-      break;
-      case "ShiftLeft":
-      player.rolling = false;
-      break;
-    }
-  });
+			case "KeyS":
+			if (player.grounded && player.lastGround.oneWay && !player.phasing.includes(player.lastGround)){
+				player.phasing.push(player.lastGround);
+			}
+			break;
+			case "ShiftLeft":
+			if (!player.rolling && player.grounded){
+				//initial roll convert
+				var theta = -Math.atan(player.lastGround.slope);
+				player.vy = Math.sin(theta) * player.vx;
+				player.vx = Math.cos(theta) * player.vx;
+			}
+			if (!player.rolling){
+				animate(player, "character/roll/roll");
+			}
+			player.rolling = true;
+			break;
+			case "KeyX":
+			drawDebug = !drawDebug;
+			break;
+		}
+	});
+	document.addEventListener("keyup", event => {
+		if (!control){
+			return;
+		}
+		switch(event.code){
+			case "KeyA":
+			case "ArrowLeft":
+			left = false;
+			break;
+			case "KeyD":
+			case "ArrowRight":
+			right = false;
+			break;
+			case "ShiftLeft":
+			player.rolling = false;
+			break;
+		}
+	});
 
 }
 
 function sound(src) {
-  this.sound = new Audio("sounds/" + src);
-  // this.sound.src = "sounds/" + src;
-  // this.sound.setAttribute("preload", "auto");
-  // this.sound.setAttribute("controls", "none");
-  // this.sound.style.display = "none";
-  this.sound.volume = .3;
-  // document.body.appendChild(this.sound);
-  this.play = function(){
-    this.sound.play();
-  }
-  this.stop = function(){
-    this.sound.pause();
-  }
+	this.sound = new Audio("sounds/" + src);
+	// this.sound.src = "sounds/" + src;
+	// this.sound.setAttribute("preload", "auto");
+	// this.sound.setAttribute("controls", "none");
+	// this.sound.style.display = "none";
+	this.sound.volume = .3;
+	// document.body.appendChild(this.sound);
+	this.play = function(){
+		this.sound.play();
+	}
+	this.stop = function(){
+		this.sound.pause();
+	}
 }

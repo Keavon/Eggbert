@@ -8,7 +8,7 @@ let entities = [];
 let player;
 let lastTime;
 
-let drawDebug = false;
+let drawDebug = true;
 
 let screenText = "";
 let screenTimeout;
@@ -115,6 +115,7 @@ function loadTerrain(data){
 	// terrain.push(newSegment(200, 0, 200, 1000, true));
 	// terrain.push(newSegment(200, 50, 200, 1000, true));
 	// terrain.push(newSegment(200, 50, 210, 50, true));
+	terrain.push(newSegment(-100, 300, 3000, 300, true));
 }
 
 // Match canvas resolution to document dimensions
@@ -178,7 +179,7 @@ function render() {
 		});
 	}
 
-	context.font = "30px Comic Sans MS";
+	context.font = "30px Indie Flower";
 	context.fillStyle = "black";
 	context.textAlign = "center";
 	context.fillText(screenText, 600 - canvasOffset.x, 200 - canvasOffset.y);

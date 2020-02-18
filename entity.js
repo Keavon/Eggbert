@@ -20,6 +20,7 @@ function newEntity(x = 0, y = 0, w = 0, h = 0){
     rolling: false,
     forceSlide: false,
     lastGround: null,
+		phasing: [],
     vx: 0.0,
     vy: 0.0,
     c: newCircle(x + w/2, y + h - h/4, h/4),
@@ -135,6 +136,14 @@ function drawEntity(entity, context){
     } else{
       context.drawImage(getSpriteFrame(entity.img, entity.frame), entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, entity.hitBox. h);
     }
+		if (entity.type == "player"){
+			context.fillStyle = 'purple';
+			context.fillRect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w - (entity.hitBox.w * (shellIntegrity / 100.0)), 8);
+			context.strokeStyle = 'black';
+			context.beginPath()
+			context.rect(entity.hitBox.x, entity.hitBox.y, entity.hitBox.w, 8)
+			context.stroke();
+		}
 
   }
   if (drawDebug){
