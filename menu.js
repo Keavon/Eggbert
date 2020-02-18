@@ -5,6 +5,7 @@ function menu(){
   // console.log("hello");
   document.querySelector("#play").addEventListener("click", startGame);
   document.querySelector("#credits").addEventListener("click", rollCredits);
+  document.querySelector("#menu").addEventListener("click", ()=>{window.location.reload()});
 }
 
 function startGame(){

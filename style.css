@@ -21,9 +21,13 @@ canvas {
 	padding: 5px 35% 5px 35%;
 }
 
+#menu{
+	margin-top: 50%;
+}
+
 .menuElement{
 	font-size: 50px;
-	background-color: #88aacc;
+	background-color: #88ccaa;
 	padding: 5px 50px 5px 50px;
 	margin: 5px 5px 5px 5px;
 	border-radius: 2px;
@@ -32,5 +36,5 @@ canvas {
 }
 
 .menuElement:hover{
-	background-color: #aaccee;
+	background-color: #aaeecc;
 }
