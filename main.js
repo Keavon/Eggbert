@@ -38,7 +38,7 @@ function preloadSprites() {
 }
 
 function message(t){
-	clearTimeout
+	// clearTimeout
 	screenText = t;
 	clearTimeout(screenTimeout);
 	screenTimeout = setTimeout(() => {screenText = "";clearTimeout();}, 5000);

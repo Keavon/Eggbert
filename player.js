@@ -9,12 +9,12 @@ let sounds = {
   crack: "crack.wav",
 	step1: "step1.mp3",
 	step2: "step2.mp3",
-  //need below this line
-  roll: "rolling.wav",
-  jump: "jump.wav",
   music: "music.mp3",
-  victory: "victory.wav",
-  chirp: "chirp.wav"
+  //need below this line
+  // roll: "rolling.wav",
+  // jump: "jump.wav",
+  // victory: "victory.wav",
+  // chirp: "chirp.wav"
 }
 
 const ROLL_ACCEL = 200;
