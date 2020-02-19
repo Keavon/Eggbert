@@ -24,11 +24,15 @@ function preloadSprites() {
 		loadSprite("character/idle1/idle1", 30),
 		loadSprite("character/idle2/idle2", 30),
 		loadSprite("character/roll/roll", 15),
-		loadSprite("character/jump/jump", 4),
-		loadSprite("character/fall/fall", 2),
+		loadSprite("character/jump/jump", 30),
+		loadSprite("character/fall/fall", 30),
 		loadSprite("rock/solid"),
 		loadSprite("rock/broken"),
-		loadSprite("level"),
+		loadSprite("level/level_1"),
+		loadSprite("level/level_2"),
+		loadSprite("level/level_3"),
+		loadSprite("level/level_4"),
+		loadSprite("level/level_5"),
 
 	]);
 }
@@ -181,7 +185,13 @@ function render() {
 
 	context.clearRect(-canvasOffset.x, -	canvasOffset.y, canvas.width / scaleFitNative, canvas.height / scaleFitNative);
 
-	context.drawImage(getSpriteFrame("level", 0), 0, 0);
+	const bgOffsetX = -1035;
+	const bgOffsetY = 810;
+	context.drawImage(getSpriteFrame("level/level_1", 0), bgOffsetX + 4096 * 0, bgOffsetY);
+	context.drawImage(getSpriteFrame("level/level_2", 0), bgOffsetX + 4096 * 1, bgOffsetY);
+	context.drawImage(getSpriteFrame("level/level_3", 0), bgOffsetX + 4096 * 2, bgOffsetY);
+	context.drawImage(getSpriteFrame("level/level_4", 0), bgOffsetX + 4096 * 3, bgOffsetY);
+	context.drawImage(getSpriteFrame("level/level_5", 0), bgOffsetX + 4096 * 3, bgOffsetY - 2048);
 
 	entities.forEach((entity, i) => {
 		drawEntity(entity, context);
