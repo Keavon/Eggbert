@@ -65,7 +65,7 @@ function updatePlayer(delta){
         animate(player, "character/idle1/idle1");
         player.idleLoop = (5 + Math.floor(Math.random() * 10));
       }else if (player.idleLoop <= 0 && player.nextAnim == player.img){
-        player.nextAnim = (2 + Math.floor(Math.random() * 1) === 1 ? "character/idle1/idle1" : "character/idle1/idle2");
+        player.nextAnim = (2 + Math.floor(Math.random() * 1) === 1 ? "character/idle1/idle1" : "character/idle2/idle2");
       }
     }
     if (player.vx == 0){
