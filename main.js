@@ -23,7 +23,7 @@ function preloadSprites() {
 		loadSprite("character/run/run", 10),
 		loadSprite("character/idle1/idle1", 30),
 		loadSprite("character/idle2/idle2", 30),
-		loadSprite("character/roll/roll", 2),
+		loadSprite("character/roll/roll", 15),
 		loadSprite("character/jump/jump", 4),
 		loadSprite("character/fall/fall", 2),
 		loadSprite("rock/solid"),
