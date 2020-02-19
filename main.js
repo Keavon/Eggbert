@@ -8,7 +8,7 @@ let entities = [];
 let player;
 let lastTime;
 
-let drawDebug = true;
+let drawDebug = false;
 
 let screenText = "";
 let screenTimeout;
@@ -20,9 +20,9 @@ function preloadSprites() {
 	return Promise.all([
 		// loadSprite("character/run/left", 6),
 		// loadSprite("character/run/right", 6),
-		loadSprite("character/run/run", 6),
-		loadSprite("character/idle/idle1", 4),
-		loadSprite("character/idle/idle2", 4),
+		loadSprite("character/run/run", 10),
+		loadSprite("character/idle1/idle1", 30),
+		loadSprite("character/idle2/idle2", 30),
 		loadSprite("character/roll/roll", 2),
 		loadSprite("character/jump/jump", 4),
 		loadSprite("character/fall/fall", 2),

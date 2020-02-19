@@ -1,5 +1,5 @@
 
-const ANIMATION_FPS = 8;
+const ANIMATION_FPS = 30;
 const gravity = 2000;
 
 function newEntity(x = 0, y = 0, w = 0, h = 0){

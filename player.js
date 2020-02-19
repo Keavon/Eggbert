@@ -62,10 +62,10 @@ function updatePlayer(delta){
     } else if (player.grounded){
       if (!player.idle){
         player.idle = true;
-        animate(player, "character/idle/idle1");
+        animate(player, "character/idle1/idle1");
         player.idleLoop = (5 + Math.floor(Math.random() * 10));
       }else if (player.idleLoop <= 0 && player.nextAnim == player.img){
-        player.nextAnim = "character/idle/idle" + (2 + Math.floor(Math.random() * 1));
+        player.nextAnim = (2 + Math.floor(Math.random() * 1) === 1 ? "character/idle1/idle1" : "character/idle1/idle2");
       }
     }
     if (player.vx == 0){
