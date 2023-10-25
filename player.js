@@ -129,6 +129,7 @@ function setupPlayer(){
 			}
 			break;
 			case "KeyS":
+			case "ArrowDown":
 			if (player.grounded && player.lastGround.oneWay && !player.phasing.includes(player.lastGround)){
 				player.phasing.push(player.lastGround);
 			}
